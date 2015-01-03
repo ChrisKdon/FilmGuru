@@ -33,10 +33,11 @@ public class Matrix {
 	}
 
 	public Matrix hadamardProduct(Matrix withMatrix) {
-		checkSize(this, withMatrix);
+		if (getRows() != withMatrix.getRows() || getColumns() != withMatrix.getColumns()) {
+			throw new RuntimeException("Matrices must be the same size.");
+		}
 
 		double[][] temp = new double[getRows()][getColumns()];
-
 		for (int row = 0; row < matrix.length; row++) {
 			for (int col = 0; col < matrix[row].length; col++) {
 				temp[row][col] = matrix[row][col] * withMatrix.matrix[row][col];
@@ -48,9 +49,8 @@ public class Matrix {
 
 	public Matrix transpose() {
 		double[][] transposed = new double[getColumns()][getRows()];
-
-		for(int r = 0; r < matrix.length; r++) {
-			for(int c = 0; c < matrix[r].length; c++) {
+		for (int r = 0; r < getRows(); r++) {
+			for (int c = 0; c < getColumns(); c++) {
 				transposed[c][r] = matrix[r][c];
 			}
 		}
@@ -59,17 +59,33 @@ public class Matrix {
 	}
 
 	public Matrix multiply(Matrix withMatrix) {
-		throw new UnsupportedOperationException();
+		if(getColumns() != withMatrix.getRows()) {
+			throw new RuntimeException("Matrices have incorrect dimensions, cannot be multiplied.");
+		}
+
+		double[][] result = new double[getRows()][withMatrix.getColumns()];
+		for (int r = 0; r < getRows(); r++) {
+			for (int c = 0; c < withMatrix.getColumns(); c++) {
+				double sum = 0;
+				for (int k = 0; k < getColumns(); k++) {
+					sum += matrix[r][k] * withMatrix.matrix[k][c];
+				}
+
+				result[r][c] = sum;
+			}
+		}
+
+		return new Matrix(result);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 
-		for(int r = 0; r < matrix.length; r++) {
-			for(int c = 0; c < matrix[r].length; c++) {
+		for (int r = 0; r < matrix.length; r++) {
+			for (int c = 0; c < matrix[r].length; c++) {
 				sb.append(matrix[r][c]);
-				if(c + 1 != matrix[r].length) {
+				if (c + 1 != matrix[r].length) {
 					sb.append(", ");
 				}
 			}
@@ -77,11 +93,5 @@ public class Matrix {
 		}
 
 		return sb.toString();
-	}
-
-	private static void checkSize(Matrix a, Matrix b) {
-		if(a.getRows() != b.getRows() || a.getColumns() != b.getColumns()) {
-			throw new RuntimeException("Matrices must be the same size.");
-		}
 	}
 }
