@@ -1,4 +1,6 @@
 .sidebar {
+  padding-right: 0;
+  
   .title {
     margin-top: 0;
     background-color: #2C2C2C;
@@ -7,10 +9,15 @@
 }
 
 .movies {
-  .movie {
-    float: left;
+  background-color: lighten(lightgrey, 15%);
 
+  .movie {
+    @titleBackground: black;
+
+    float: left;
     margin: 5px 10px;
+    border: solid 1px @titleBackground;
+    padding-bottom: 5px;
 
     img.poster {
       width: 140px;
@@ -18,13 +25,23 @@
     }
 
     .title {
-      // Movie title
+      background-color: @titleBackground;
+      color: white;
     }
 
-    .rating-input {
+    .rating-section {
       text-align: center;
-      font-size: 20px;
-      color: gold;
+
+      .rating-input {
+        font-size: 20px;
+        color: gold;
+        cursor: pointer;
+      }
+
+      [type='button'].not-interested {
+        padding: 0 20px;
+        height: 25px;
+      }
     }
   }
 }

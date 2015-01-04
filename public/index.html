@@ -9,7 +9,7 @@
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
-	<link rel="stylesheet/less" type="text/css" href="css/main.less" />
+	<link rel="stylesheet/less" type="text/css" href="css/main.less"/>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.1.2/less.min.js"></script>
 </head>
@@ -23,63 +23,12 @@
 		<div class="col-md-10 movies">
 			<div class="movie">
 				<div class="title text-center">Fight Club</div>
-				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club" />
-				<input id="input-id" type="number" class="rating" data-max="5" data-min="1">
-			</div>
-			<div class="movie">
-				<div class="title text-center">Fight Club</div>
-				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club" />
-				<input id="input-id" type="number" class="rating" data-max="5" data-min="1">
-			</div>
-			<div class="movie">
-				<div class="title text-center">Fight Club</div>
-				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club" />
-				<input id="input-id" type="number" class="rating" data-max="5" data-min="1">
-			</div>
-			<div class="movie">
-				<div class="title text-center">Fight Club</div>
-				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club" />
-				<input id="input-id" type="number" class="rating" data-max="5" data-min="1">
-			</div>
-			<div class="movie">
-				<div class="title text-center">Fight Club</div>
-				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club" />
-				<input id="input-id" type="number" class="rating" data-max="5" data-min="1">
-			</div>
-			<div class="movie">
-				<div class="title text-center">Fight Club</div>
-				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club" />
-				<input id="input-id" type="number" class="rating" data-max="5" data-min="1">
-			</div>
-			<div class="movie">
-				<div class="title text-center">Fight Club</div>
-				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club" />
-				<input id="input-id" type="number" class="rating" data-max="5" data-min="1">
-			</div>
-			<div class="movie">
-				<div class="title text-center">Fight Club</div>
-				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club" />
-				<input id="input-id" type="number" class="rating" data-max="5" data-min="1">
-			</div>
-			<div class="movie">
-				<div class="title text-center">Fight Club</div>
-				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club" />
-				<input id="input-id" type="number" class="rating" data-max="5" data-min="1">
-			</div>
-			<div class="movie">
-				<div class="title text-center">Fight Club</div>
-				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club" />
-				<input id="input-id" type="number" class="rating" data-max="5" data-min="1">
-			</div>
-			<div class="movie">
-				<div class="title text-center">Fight Club</div>
-				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club" />
-				<input id="input-id" type="number" class="rating" data-max="5" data-min="1">
-			</div>
-			<div class="movie">
-				<div class="title text-center">Fight Club</div>
-				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club" />
-				<input id="input-id" type="number" class="rating" data-max="5" data-min="1">
+				<img class="poster" src="http://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" alt="Fight Club"/>
+
+				<div class="rating-section">
+					<input class="rating" type="number" data-max="5" data-min="1">
+					<input class="btn btn-default not-interested" type="button" value="Not Interested" data-value="0"/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -99,7 +48,7 @@
 		size: "xs"
 	});
 
-	$('.rating').change(function() {
+	$('.rating').change(function () {
 		console.log("Change");
 	});
 </script>
