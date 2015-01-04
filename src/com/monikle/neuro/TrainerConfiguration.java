@@ -10,6 +10,7 @@ public final class TrainerConfiguration {
 	private double acceptableError;
 	private double validationAmount;
 	private TrainingData trainingData;
+	private boolean shuffleTrainingData;
 
 	private TrainerConfiguration(TrainingData trainingData) {
 		this.trainingData = trainingData;
@@ -42,6 +43,15 @@ public final class TrainerConfiguration {
 
 	public TrainingData getTrainingData() {
 		return trainingData;
+	}
+
+	public boolean getShuffleTrainingData() {
+		return shuffleTrainingData;
+	}
+
+	public TrainerConfiguration setShuffleTrainingData(boolean shuffle) {
+		this.shuffleTrainingData = shuffle;
+		return this;
 	}
 
 	public TrainerConfiguration setAcceptableError(double error) {

@@ -76,7 +76,7 @@ public class Matrix {
 
 	// Operations -----------------------
 
-	public Matrix hadamardProduct(Matrix withMatrix) {
+	public Matrix hadamardMultiply(Matrix withMatrix) {
 		checkEqualSize(this, withMatrix);
 
 		double[][] temp = new double[getRowCount()][getColumnCount()];
@@ -87,6 +87,10 @@ public class Matrix {
 		}
 
 		return new Matrix(temp);
+	}
+
+	public Matrix scalarMultiply(double value) {
+		return map(elem -> elem * value);
 	}
 
 	public Matrix transpose() {
@@ -102,7 +106,9 @@ public class Matrix {
 
 	public Matrix multiply(Matrix withMatrix) {
 		if(getColumnCount() != withMatrix.getRowCount()) {
-			throw new RuntimeException("Matrices have incorrect dimensions, cannot be multiplied.");
+			throw new RuntimeException("Matrices have incorrect dimensions, cannot be multiplied." +
+			                           "Trying to multiply a " + getRowCount() + "x" + getColumnCount() + " by " +
+																 withMatrix.getRowCount() + "x" + withMatrix.getColumnCount());
 		}
 
 		double[][] result = new double[getRowCount()][withMatrix.getColumnCount()];
@@ -127,6 +133,19 @@ public class Matrix {
 		for (int row = 0; row < matrix.length; row++) {
 			for (int col = 0; col < matrix[row].length; col++) {
 				temp[row][col] = matrix[row][col] - withMatrix.matrix[row][col];
+			}
+		}
+
+		return new Matrix(temp);
+	}
+
+	public Matrix add(Matrix withMatrix) {
+		checkEqualSize(this, withMatrix);
+
+		double[][] temp = new double[getRowCount()][getColumnCount()];
+		for (int row = 0; row < matrix.length; row++) {
+			for (int col = 0; col < matrix[row].length; col++) {
+				temp[row][col] = matrix[row][col] + withMatrix.matrix[row][col];
 			}
 		}
 
@@ -165,7 +184,8 @@ public class Matrix {
 
 	private static void checkEqualSize(Matrix a, Matrix b) {
 		if (a.getRowCount() != b.getRowCount() || a.getColumnCount() != b.getColumnCount()) {
-			throw new RuntimeException("Matrices must be the same size.");
+			throw new RuntimeException("Matrices must be the same size. A: " + a.getRowCount() + "x" + a.getColumnCount() +
+																 " B: " + b.getRowCount() + "x" + b.getColumnCount());
 		}
 	}
 }

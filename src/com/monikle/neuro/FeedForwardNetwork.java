@@ -14,7 +14,7 @@ import java.util.List;
  * Date:      2015-01-02.
  */
 public final class FeedForwardNetwork implements NeuralNetwork {
-	private final int inputCount;                // The number of inputs
+	private final int inputCount;                 // The number of inputs
 	private final double learningRate, momentum;  // Network training settings
 	private Matrix inputToHiddenWeights, hiddenToOutputWeights;
 
@@ -29,6 +29,10 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 			throw new IllegalArgumentException("`outputCount` must be > 0");
 		}
 
+		if (momentum < 0 || momentum > 1) {
+			throw new IllegalArgumentException("Range Exception: 0 < momentum < 1.");
+		}
+
 		this.inputCount = inputCount;
 		this.learningRate = learningRate;
 		this.momentum = momentum;
@@ -39,6 +43,10 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 
 	@Override
 	public void train(TrainerConfiguration config) {
+		if (config.getShuffleTrainingData()) {
+			config.getTrainingData().shuffle();
+		}
+
 		// Prepare Sample Training Data
 		final List<TrainingSample> trainingData = config.getTrainingData().getFirst(1 - config.getValidationAmount());
 
@@ -55,6 +63,13 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 
 				Vector deltaOutput = Vector.fromMatrix(sample.getOutputs().subtract(actual));
 				Vector deltaHidden = Vector.fromMatrix(deltaOutput.multiply(hiddenToOutputWeights.transpose()));
+
+				Vector inputWithBias = sample.getInputs().add(1);
+
+				// Update Weights
+				this.inputToHiddenWeights = backpropWeights(inputWithBias, inputToHiddenWeights, deltaHidden);
+				Vector newHidden = calculateLayerOutput(inputWithBias, inputToHiddenWeights);
+				this.hiddenToOutputWeights = backpropWeights(newHidden, hiddenToOutputWeights, deltaOutput);
 			}
 
 			// Calculate Error
@@ -65,7 +80,21 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 		}
 	}
 
-	protected double computeEpochError(Vector[] expected, Vector[] actual) {
+	private Matrix backpropWeights(Vector input, Matrix weights, Vector delta) {
+		Vector a = Vector.fromMatrix(input.multiply(weights).map(this::derivativeActivationFunction));
+		Matrix b = a.hadamardMultiply(delta);
+		Matrix c = b.scalarMultiply(learningRate);
+		Matrix d = c.transpose().multiply(input);
+		Matrix newWeights = d.transpose().add(weights);
+
+		// Momentum
+		Matrix momentumWeights = newWeights.subtract(weights);
+		newWeights = momentumWeights.scalarMultiply(momentum).add(weights);
+
+		return newWeights;
+	}
+
+	private double computeEpochError(Vector[] expected, Vector[] actual) {
 		double error = 0;
 
 		for (int i = 0; i < expected.length; i++) {

@@ -1,6 +1,7 @@
 package com.monikle.neuro;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,6 +18,10 @@ public final class TrainingData implements Iterable<TrainingSample> {
 
 	public TrainingData() {
 		samples = new ArrayList<TrainingSample>();
+	}
+
+	public void shuffle() {
+		Collections.shuffle(samples);
 	}
 
 	public void add(double[] inputs, double[] outputs) {
