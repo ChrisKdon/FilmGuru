@@ -1,12 +1,9 @@
 package com.monikle;
 
 import com.monikle.memdb.MemoryDatabase;
-import com.monikle.webserver.models.Movie;
 import com.monikle.webserver.tmdb.MovieAPI;
 import com.monikle.webserver.transformers.JsonTransformer;
 import spark.Route;
-
-import java.util.ArrayList;
 
 import static spark.Spark.externalStaticFileLocation;
 import static spark.Spark.get;

@@ -19,7 +19,9 @@ public class MovieAPI {
 	}
 
 	public static List<Movie> popular(int page) throws Exception {
-		JSONObject result = Unirest.get("http://api.themoviedb.org/3/movie/popular?api_key=" + API_KEY + "&page=" + page)
+		JSONObject result = Unirest.get("http://api.themoviedb.org/3/movie/popular")
+				.queryString("api_key", API_KEY)
+				.queryString("page", page)
 				.asJson().getBody().getObject();
 
 		List<Movie> movies = new ArrayList<>();
