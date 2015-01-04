@@ -16,6 +16,10 @@ public final class TrainerConfiguration {
 	}
 
 	public static TrainerConfiguration create(TrainingData trainingData) {
+		if(trainingData == null) {
+			throw new IllegalArgumentException("`trainingData` can't be null.");
+		}
+
 		return new TrainerConfiguration(trainingData);
 	}
 

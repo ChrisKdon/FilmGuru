@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.DoubleFunction;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 
 /**
  * 3-Layer (input -> hidden -> output) neural network.
@@ -39,27 +40,18 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 		final List<TrainingSample> trainingData = config.getTrainingData().getFirst(1 - config.getValidationAmount());
 
 		List<TrainingSample> validationData = config.getTrainingData().getLast(config.getValidationAmount());
-
-		Vector[] validationInputs = (Vector[])validationData.parallelStream().map(new Function<TrainingSample, Vector>() {
-			@Override
-			public Vector apply(TrainingSample trainingSample) {
-				return trainingSample.getInputs();
-			}
-		}).toArray();
-
-		Vector[] validationOutputs = (Vector[])validationData.parallelStream().map(new Function<TrainingSample, Vector>() {
-			@Override
-			public Vector apply(TrainingSample trainingSample) {
-				return trainingSample.getOutputs();
-			}
-		}).toArray();
+		Vector[] validationInputs = validationData.parallelStream().map(s -> s.getInputs()).toArray(size -> new Vector[size]);
+		Vector[] validationOutputs = validationData.parallelStream().map(s -> s.getOutputs()).toArray(size -> new Vector[size]);
 
 		// Run Training
 		for(int epoch = 0; epoch < config.getMaxEpochs(); epoch++) {
 			Collections.shuffle(trainingData);
 
 			for(TrainingSample sample : trainingData) {
+				Vector actual = run(sample.getInputs());
 
+				Vector deltaOutput = Vector.fromMatrix(sample.getOutputs().subtract(actual));
+				Vector deltaHidden = Vector.fromMatrix(deltaOutput.multiply(hiddenToOutputWeights.transpose()));
 			}
 
 			// Calculate Error

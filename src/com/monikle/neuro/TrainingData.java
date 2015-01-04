@@ -13,7 +13,15 @@ import java.util.List;
  * Date:      2015-01-02.
  */
 public final class TrainingData implements Iterable<TrainingSample> {
-	private ArrayList<TrainingSample> samples;
+	private List<TrainingSample> samples;
+
+	public TrainingData() {
+		samples = new ArrayList<TrainingSample>();
+	}
+
+	public void add(double[] inputs, double[] outputs) {
+		samples.add(new TrainingSample(inputs, outputs));
+	}
 
 	public List<TrainingSample> getFirst(double amount) {
 		return samples.subList(0, (int)Math.floor(samples.size() * amount));

@@ -77,9 +77,7 @@ public class Matrix {
 	// Operations -----------------------
 
 	public Matrix hadamardProduct(Matrix withMatrix) {
-		if (getRowCount() != withMatrix.getRowCount() || getColumnCount() != withMatrix.getColumnCount()) {
-			throw new RuntimeException("Matrices must be the same size.");
-		}
+		checkEqualSize(this, withMatrix);
 
 		double[][] temp = new double[getRowCount()][getColumnCount()];
 		for (int row = 0; row < matrix.length; row++) {
@@ -122,6 +120,19 @@ public class Matrix {
 		return new Matrix(result);
 	}
 
+	public Matrix subtract(Matrix withMatrix) {
+		checkEqualSize(this, withMatrix);
+
+		double[][] temp = new double[getRowCount()][getColumnCount()];
+		for (int row = 0; row < matrix.length; row++) {
+			for (int col = 0; col < matrix[row].length; col++) {
+				temp[row][col] = matrix[row][col] - withMatrix.matrix[row][col];
+			}
+		}
+
+		return new Matrix(temp);
+	}
+
 	public Matrix map(DoubleFunction<Double> func) {
 		double[][] result = new double[getRowCount()][getColumnCount()];
 		for(int r = 0; r < getRowCount(); r++) {
@@ -148,5 +159,13 @@ public class Matrix {
 		}
 
 		return sb.toString();
+	}
+
+	// Checks ---------------------------
+
+	private static void checkEqualSize(Matrix a, Matrix b) {
+		if (a.getRowCount() != b.getRowCount() || a.getColumnCount() != b.getColumnCount()) {
+			throw new RuntimeException("Matrices must be the same size.");
+		}
 	}
 }
