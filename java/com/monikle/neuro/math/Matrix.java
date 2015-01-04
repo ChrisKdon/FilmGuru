@@ -7,7 +7,6 @@ import java.util.function.DoubleFunction;
 /**
  * Author:    Chris Kellendonk
  * Student #: 4810800
- * Date:      2015-01-02.
  */
 public class Matrix {
 	protected double[][] matrix; // Row-Column order for matrix

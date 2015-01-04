@@ -5,7 +5,6 @@ import java.util.Arrays;
 /**
  * Author:    Chris Kellendonk
  * Student #: 4810800
- * Date:      2015-01-03.
  */
 public final class Vector extends Matrix {
 	private int length;

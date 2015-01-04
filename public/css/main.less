@@ -34,8 +34,12 @@
 
       .rating-input {
         font-size: 20px;
-        color: gold;
+        color: red;       // Color of guessed ratings
         cursor: pointer;
+
+        &.actual {
+          color: orange; // Color of actual ratings from the user
+        }
       }
 
       [type='button'].not-interested {

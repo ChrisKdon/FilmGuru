@@ -11,7 +11,6 @@ import java.util.List;
  *
  * Author:    Chris Kellendonk
  * Student #: 4810800
- * Date:      2015-01-02.
  */
 public final class TrainingData implements Iterable<TrainingSample> {
 	private List<TrainingSample> samples;

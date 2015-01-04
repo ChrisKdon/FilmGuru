@@ -11,7 +11,6 @@ import java.util.List;
  * <p>
  * Author:    Chris Kellendonk
  * Student #: 4810800
- * Date:      2015-01-02.
  */
 public final class FeedForwardNetwork implements NeuralNetwork {
 	private final int inputCount;                 // The number of inputs
