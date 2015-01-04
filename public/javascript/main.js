@@ -13,15 +13,19 @@
 		});
 	}
 
-	function loadMovies(onComplete) {
+	/**
+	 * Load random movies from the server.
+	 *
+	 * @param onComplete
+	 */
+	function loadRandomMovies(onComplete) {
 		$.getJSON("movies/random", onComplete);
 	}
 
 	$(function () {
-
-		loadMovies(function(movies) {
+		loadRandomMovies(function(movies) {
 			$("#movieList").html(templates.movieList({movies:movies}));
 			initRatingControls();
-		})
+		});
 	});
 })();

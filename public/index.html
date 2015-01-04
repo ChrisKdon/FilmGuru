@@ -7,14 +7,16 @@
 
 	<title>Film Guru 0.1</title>
 
+	<!-- CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 	<link rel="stylesheet/less" type="text/css" href="css/main.less"/>
 
+	<!-- Templates -->
 	<script id="partial-movie" type="text/x-handlebars-template">
 		<div id="movie-{{movieId}}" class="movie">
-			<div class="title text-center">{{movieTitle}}</div>
-			<img class="poster" src="http://image.tmdb.org/t/p/w500/{{moviePosterFile}}" alt="Fight Club"/>
+			<div class="title text-center" title="{{movieTitle}}">{{movieTitle}}</div>
+			<img class="poster" src="http://image.tmdb.org/t/p/w500{{moviePosterFile}}" alt="Fight Club"/>
 
 			<div class="rating-section">
 				<div class="star-rating {{#if isUserRating}}user{{/if}}">

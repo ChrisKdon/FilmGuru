@@ -13,27 +13,34 @@
 
   .movie {
     @titleBackground: black;
+    @moviePosterWidth: 140px;
+    @moviePosterHeight: 195px;
 
     float: left;
     margin: 5px 10px;
     border: solid 1px @titleBackground;
+    width: @moviePosterWidth;
+    height: @moviePosterHeight + 80px;
     padding-bottom: 5px;
 
     img.poster {
-      width: 140px;
-      height: 195px;
+      width: @moviePosterWidth;
+      height: @moviePosterHeight;
     }
 
     .title {
+      white-space: nowrap;
       background-color: @titleBackground;
       color: white;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .rating-section {
       text-align: center;
 
       .star-rating {
-        color: red; // Color of guessed ratings
+        color: red;       // Color of guessed ratings
         font-size: 20px;
         cursor: pointer;
 

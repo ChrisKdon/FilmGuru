@@ -5,7 +5,7 @@ package com.monikle.webserver.models;
  * Student #: 4810800
  */
 public final class Movie {
-	private String movieId;					// ID of the movie on tmdb.org
+	private int movieId;					// ID of the movie on tmdb.org
 	private String movieTitle;			// The name of the movie
 	private String moviePosterFile; // The movie poster from http://image.tmdb.org/t/p/w500/<moviePosterFile>
 	private int rating;							// 1 - 5 rating for the movie
@@ -13,7 +13,7 @@ public final class Movie {
 
 	public Movie() {}
 
-	public Movie(String movieId, String movieTitle, String moviePosterFile, int rating, boolean isUserRating) {
+	public Movie(int movieId, String movieTitle, String moviePosterFile, int rating, boolean isUserRating) {
 		this.movieId = movieId;
 		this.movieTitle = movieTitle;
 		this.moviePosterFile = moviePosterFile;
