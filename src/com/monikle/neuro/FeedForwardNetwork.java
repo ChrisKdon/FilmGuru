@@ -59,17 +59,8 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 			Collections.shuffle(trainingData);
 
 			for (TrainingSample sample : trainingData) {
-				Vector actual = run(sample.getInputs());
-
-				Vector deltaOutput = Vector.fromMatrix(sample.getOutputs().subtract(actual));
-				Vector deltaHidden = Vector.fromMatrix(deltaOutput.multiply(hiddenToOutputWeights.transpose()));
-
-				Vector inputWithBias = sample.getInputs().add(1);
-
-				// Update Weights
-				this.inputToHiddenWeights = backpropWeights(inputWithBias, inputToHiddenWeights, deltaHidden);
-				Vector newHidden = calculateLayerOutput(inputWithBias, inputToHiddenWeights);
-				this.hiddenToOutputWeights = backpropWeights(newHidden, hiddenToOutputWeights, deltaOutput);
+				// TODO Create Backpop Algo
+				// http://neuralnetworksanddeeplearning.com/chap2.html
 			}
 
 			// Calculate Error
@@ -78,20 +69,6 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 				return;
 			}
 		}
-	}
-
-	private Matrix backpropWeights(Vector input, Matrix weights, Vector delta) {
-		Vector a = Vector.fromMatrix(input.multiply(weights).map(this::derivativeActivationFunction));
-		Matrix b = a.hadamardMultiply(delta);
-		Matrix c = b.scalarMultiply(learningRate);
-		Matrix d = c.transpose().multiply(input);
-		Matrix newWeights = d.transpose().add(weights);
-
-		// Momentum
-		Matrix momentumWeights = newWeights.subtract(weights);
-		newWeights = momentumWeights.scalarMultiply(momentum).add(weights);
-
-		return newWeights;
 	}
 
 	private double computeEpochError(Vector[] expected, Vector[] actual) {
@@ -109,7 +86,7 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 			error += norm;
 		}
 
-		error *= 0.5;
+		error *= 1/expected.length;
 
 		return error;
 	}
@@ -130,8 +107,8 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 			throw new IllegalArgumentException("`input` vector must be of length " + inputCount);
 		}
 
-		Vector hidden = calculateLayerOutput(input.add(1), inputToHiddenWeights);
-		Vector output = calculateLayerOutput(hidden.add(1), hiddenToOutputWeights);
+		Vector hidden = calculateLayerOutput(input, inputToHiddenWeights);
+		Vector output = calculateLayerOutput(hidden, hiddenToOutputWeights);
 
 		return output;
 	}
@@ -142,10 +119,14 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 	}
 
 	/**
-	 * @param input Input vector with bias already in it.
+	 * Adds the bias to the input and calculates the output.
+	 *
+	 * @param input
+	 * @param weights
+	 * @return
 	 */
 	public Vector calculateLayerOutput(Vector input, Matrix weights) {
-		return Vector.fromMatrix(input.multiply(weights).map(this::activationFunction));
+		return Vector.fromMatrix(input.add(1).multiply(weights).map(this::activationFunction));
 	}
 
 	/**
