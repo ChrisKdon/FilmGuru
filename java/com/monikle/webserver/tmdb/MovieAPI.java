@@ -15,7 +15,6 @@ import java.util.List;
  */
 public class MovieAPI {
 	private static String API_KEY = "b49b1c4bca7553daf26632cf8237e6e6";
-	private static MovieDatabase db = MovieDatabase.getDb();
 
 	private MovieAPI() {}
 
@@ -32,19 +31,10 @@ public class MovieAPI {
 		for(int i = 0; i < popularMovies.length(); i++) {
 			JSONObject m = popularMovies.getJSONObject(i);
 
-			int movieId = m.getInt("id");
-			int rating = db.getRatingOrDefault(username, movieId, -1);
-			boolean hasUserRating = rating >= 0;
-
-			if(rating < 0) {
-				hasUserRating = false;
-				// TODO: Calculate from neural network
-			}
-
-			movies.add(new Movie(movieId,
-													 m.getString("title"),
-													 m.getString("poster_path"),
-													 rating, hasUserRating));
+			movies.add(Movie.forUser(username,
+					m.getInt("id"),
+					m.getString("title"),
+					m.getString("poster_path")));
 		}
 
 		return movies;
