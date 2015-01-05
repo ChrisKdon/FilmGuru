@@ -21,8 +21,6 @@ public final class MovieDatabase {
 	public static MovieDatabase getDb() {
 		if(instance == null) {
 			instance = new MovieDatabase();
-
-			instance.setRating("test", 122917, 3);
 		}
 
 		return instance;

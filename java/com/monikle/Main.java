@@ -15,6 +15,7 @@ public class Main {
 	private static void initSparkServer() {
 		externalStaticFileLocation("./public"); // Static files
 
+		// TODO: Get username
 		jsonGet("/movies/random", (req, res) -> MovieAPI.popular("test", 1));
 	}
 
