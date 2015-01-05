@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .sidebar {
   padding-right: 0;
 
@@ -29,11 +33,13 @@
     }
 
     .title {
+      width: @moviePosterWidth;
       white-space: nowrap;
       background-color: @titleBackground;
       color: white;
       overflow: hidden;
       text-overflow: ellipsis;
+      padding: 1px 5px;
     }
 
     .rating-section {
@@ -44,7 +50,7 @@
         font-size: 20px;
         cursor: pointer;
 
-        &.user {
+        &:hover, .user {
           color: orange; // Color of actual ratings from the user
         }
       }
