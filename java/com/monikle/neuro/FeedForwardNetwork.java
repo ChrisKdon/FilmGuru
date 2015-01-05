@@ -36,8 +36,8 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 		this.learningRate = learningRate;
 		this.momentum = momentum;
 
-		this.inputToHiddenWeights = Matrix.random(inputCount + 1, hiddenCount, -1, 1);
-		this.hiddenToOutputWeights = Matrix.random(hiddenCount + 1, outputCount, -1, 1);
+		this.inputToHiddenWeights = Matrix.random(inputCount, hiddenCount, -1, 1);
+		this.hiddenToOutputWeights = Matrix.random(hiddenCount, outputCount, -1, 1);
 	}
 
 	@Override
@@ -58,8 +58,22 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 			Collections.shuffle(trainingData);
 
 			for (TrainingSample sample : trainingData) {
-				// TODO Create Backpop Algo
-				// http://neuralnetworksanddeeplearning.com/chap2.html
+				// Get Weights
+				final Matrix inputWeights = inputToHiddenWeights;
+				final Matrix hiddenWeights = hiddenToOutputWeights;
+
+				// Calculate Output
+				Vector actual = run(sample.getInputs());
+
+				// Calculate Deltas
+				Vector deltaOutput = Vector.fromMatrix(sample.getOutputs().subtract(actual));
+				Vector deltaHidden = Vector.fromMatrix(deltaOutput.multiply(hiddenWeights.transpose()));
+
+				// Calculate New Weights
+				Vector inputWithBias = sample.getInputs();
+				this.inputToHiddenWeights = backPropWeights(inputWithBias, inputWeights, deltaHidden);
+				Vector newHidden = calculateLayerOutput(inputWithBias, inputWeights);
+				this.hiddenToOutputWeights = backPropWeights(newHidden, hiddenWeights, deltaOutput);
 			}
 
 			// Calculate Error
@@ -68,6 +82,22 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 				return;
 			}
 		}
+	}
+
+	private Matrix backPropWeights(Vector input, Matrix weights, Vector delta) {
+		Matrix startWeights = weights;
+
+		Vector a = Vector.fromMatrix(input.multiply(weights).map(this::derivativeActivationFunction));
+		Vector b = Vector.fromMatrix(a.hadamardMultiply(delta));
+		Vector c = Vector.fromMatrix(b.scalarMultiply(learningRate));
+		Matrix d = c.transpose().multiply(input);
+		Matrix newWeights = d.transpose().add(weights);
+
+		// Momentum
+		Matrix momentumWeights = newWeights.subtract(startWeights);
+		newWeights = momentumWeights.scalarMultiply(momentum).add(startWeights);
+
+		return newWeights;
 	}
 
 	private double computeEpochError(Vector[] expected, Vector[] actual) {
@@ -82,10 +112,11 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 				double t = actualValues[x] - expectedValues[x];
 				norm += t * t;
 			}
+
 			error += norm;
 		}
 
-		error *= 1/expected.length;
+		error *= 0.5;
 
 		return error;
 	}
@@ -125,7 +156,7 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 	 * @return
 	 */
 	public Vector calculateLayerOutput(Vector input, Matrix weights) {
-		return Vector.fromMatrix(input.add(1).multiply(weights).map(this::activationFunction));
+		return Vector.fromMatrix(input.multiply(weights).map(this::activationFunction));
 	}
 
 	/**
