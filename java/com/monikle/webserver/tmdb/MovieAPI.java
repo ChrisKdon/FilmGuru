@@ -1,8 +1,7 @@
 package com.monikle.webserver.tmdb;
 
 import com.mashape.unirest.http.Unirest;
-import com.monikle.memdb.MovieDatabase;
-import com.monikle.webserver.models.Movie;
+import com.monikle.webserver.models.ExtendedMovieDetail;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,25 +15,34 @@ import java.util.List;
 public class MovieAPI {
 	private static String API_KEY = "b49b1c4bca7553daf26632cf8237e6e6";
 
-	private MovieAPI() {}
+	private MovieAPI() {
+	}
 
-	public static List<Movie> popular(String username, int page) throws Exception {
+	public static ExtendedMovieDetail movie(String username, int movieId) throws Exception {
+		JSONObject result = Unirest.get("http://api.themoviedb.org/3/movie/{id}")
+				.queryString("api_key", API_KEY)
+				.routeParam("id", Integer.toString(movieId))
+				.asJson().getBody().getObject();
+
+		return new ExtendedMovieDetail(username, movieId,
+				result.getString("title"),
+				result.getString("poster_path"),
+				result.getString("imdb_id"));
+	}
+
+	public static List<ExtendedMovieDetail> popular(String username, int page) throws Exception {
 		JSONObject result = Unirest.get("http://api.themoviedb.org/3/movie/popular")
 				.queryString("api_key", API_KEY)
 				.queryString("page", page)
 				.asJson().getBody().getObject();
 
-		List<Movie> movies = new ArrayList<>();
-
+		List<ExtendedMovieDetail> movies = new ArrayList<>();
 
 		JSONArray popularMovies = result.getJSONArray("results");
-		for(int i = 0; i < popularMovies.length(); i++) {
+		for (int i = 0; i < popularMovies.length(); i++) {
 			JSONObject m = popularMovies.getJSONObject(i);
-
-			movies.add(Movie.forUser(username,
-					m.getInt("id"),
-					m.getString("title"),
-					m.getString("poster_path")));
+			int movieId = m.getInt("id");
+			movies.add(movie(username, movieId));
 		}
 
 		return movies;

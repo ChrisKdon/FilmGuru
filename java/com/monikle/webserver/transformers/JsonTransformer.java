@@ -2,7 +2,6 @@ package com.monikle.webserver.transformers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.monikle.webserver.models.Movie;
 import spark.ResponseTransformer;
 
 /**
