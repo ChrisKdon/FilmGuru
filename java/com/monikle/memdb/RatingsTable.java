@@ -1,17 +1,16 @@
 package com.monikle.memdb;
 
 import com.monikle.webserver.models.MovieRating;
+import com.monikle.webserver.tmdb.MovieAPI;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */
 public final class RatingsTable {
+	private static MovieDatabase db = MovieDatabase.getDb();
 	private static RatingsTable instance;
 
 	private Map<String, Map<Integer, Integer>> userRatings; // <Username, <Movie ID, Rating>>
@@ -43,19 +42,26 @@ public final class RatingsTable {
 	 *
 	 * @param username
 	 * @param movieId
-	 * @param defaultRating
 	 * @return
 	 */
-	public synchronized int getRatingOrDefault(String username, int movieId, int defaultRating) {
-		return userRatings
+	public synchronized Optional<Integer> getRating(String username, int movieId) {
+		int rating = userRatings
 				.getOrDefault(username, new HashMap<>())
-				.getOrDefault(movieId, defaultRating);
+				.getOrDefault(movieId, -1);
+
+		return rating == -1 ? Optional.empty() : Optional.of(rating);
 	}
 
-	public synchronized List<MovieRating> getMovieRatings(String username) {
+	public synchronized List<MovieRating> getMovieRatings(String username) throws Exception {
 		List<MovieRating> movieRatings = new ArrayList<>();
 
-		//userRatings.get(username)
+		Map<Integer, Integer> moviesToRatings = userRatings.getOrDefault(username, new HashMap<>());
+
+		for(int movieId : moviesToRatings.keySet()) {
+			int rating = moviesToRatings.getOrDefault(movieId, -1);
+			Optional<Integer> optRating = rating == -1 ? Optional.empty() : Optional.of(rating);
+			movieRatings.add(new MovieRating(MovieAPI.movie(movieId), optRating));
+		}
 
 		return movieRatings;
 	}

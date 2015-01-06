@@ -1,16 +1,18 @@
 package com.monikle.webserver.models;
 
+import java.util.Optional;
+
 /**
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */
 public final class MovieRating {
 	private MovieDetail movie;
-	private int rating;
+	private Optional<Integer> rating;
 
-	public MovieRating(MovieDetail movie, int rating) {
-		if(movie == null) {
-			throw new IllegalArgumentException("`movie` can't be null.");
+	public MovieRating(MovieDetail movie, Optional<Integer> rating) {
+		if(movie == null || rating == null) {
+			throw new IllegalArgumentException("`movie` and `rating` can't be null.");
 		}
 
 		this.movie = movie;
@@ -21,7 +23,7 @@ public final class MovieRating {
 		return movie;
 	}
 
-	public int getRating() {
+	public Optional<Integer> getRating() {
 		return rating;
 	}
 }
