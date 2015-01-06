@@ -16,7 +16,7 @@ public final class TrainingData implements Iterable<TrainingSample> {
 	private List<TrainingSample> samples;
 
 	public TrainingData() {
-		samples = new ArrayList<TrainingSample>();
+		samples = Collections.synchronizedList(new ArrayList<TrainingSample>());
 	}
 
 	public void shuffle() {
@@ -27,12 +27,8 @@ public final class TrainingData implements Iterable<TrainingSample> {
 		samples.add(new TrainingSample(inputs, outputs));
 	}
 
-	public List<TrainingSample> getFirst(double amount) {
-		return samples.subList(0, (int)Math.floor(samples.size() * amount));
-	}
-
-	public List<TrainingSample> getLast(double amount) {
-		return samples.subList(samples.size() - (int)Math.ceil(samples.size() * amount), samples.size());
+	public List<TrainingSample> getSamples() {
+		return samples;
 	}
 
 	@Override

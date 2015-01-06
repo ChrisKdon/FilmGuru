@@ -47,11 +47,9 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 		}
 
 		// Prepare Sample Training Data
-		final List<TrainingSample> trainingData = config.getTrainingData().getFirst(1 - config.getValidationAmount());
-
-		List<TrainingSample> validationData = config.getTrainingData().getLast(config.getValidationAmount());
-		Vector[] validationInputs = validationData.parallelStream().map(s -> s.getInputs()).toArray(size -> new Vector[size]);
-		Vector[] validationOutputs = validationData.parallelStream().map(s -> s.getOutputs()).toArray(size -> new Vector[size]);
+		final List<TrainingSample> trainingData = config.getTrainingData().getSamples();
+		Vector[] validationInputs = trainingData.parallelStream().map(s -> s.getInputs()).toArray(size -> new Vector[size]);
+		Vector[] validationOutputs = trainingData.parallelStream().map(s -> s.getOutputs()).toArray(size -> new Vector[size]);
 
 		// Run Training
 		for (int epoch = 0; epoch < config.getMaxEpochs(); epoch++) {

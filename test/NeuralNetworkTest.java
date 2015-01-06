@@ -14,16 +14,10 @@ public class NeuralNetworkTest {
 		trainingData.add(new double[] {1, 0}, new double[] {0});
 		trainingData.add(new double[] {1, 1}, new double[] {1});
 
-		trainingData.add(new double[] {0, 0}, new double[] {0});
-		trainingData.add(new double[] {0, 1}, new double[] {1});
-		trainingData.add(new double[] {1, 0}, new double[] {1});
-		trainingData.add(new double[] {1, 1}, new double[] {0});
-
 		TrainerConfiguration config = TrainerConfiguration.create(trainingData)
 				.setMaxEpochs(10000)
 				.setAcceptableError(0.001)
-				.setValidationAmount(0.5)
-				.setShuffleTrainingData(false);
+				.setShuffleTrainingData(true);
 
 		network.train(config);
 

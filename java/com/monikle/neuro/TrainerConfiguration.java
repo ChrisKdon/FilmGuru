@@ -7,7 +7,6 @@ package com.monikle.neuro;
 public final class TrainerConfiguration {
 	private int maxEpochs;
 	private double acceptableError;
-	private double validationAmount;
 	private TrainingData trainingData;
 	private boolean shuffleTrainingData;
 
@@ -36,10 +35,6 @@ public final class TrainerConfiguration {
 		return acceptableError;
 	}
 
-	public double getValidationAmount() {
-		return validationAmount;
-	}
-
 	public TrainingData getTrainingData() {
 		return trainingData;
 	}
@@ -55,15 +50,6 @@ public final class TrainerConfiguration {
 
 	public TrainerConfiguration setAcceptableError(double error) {
 		this.acceptableError = error;
-		return this;
-	}
-
-	public TrainerConfiguration setValidationAmount(double amount) {
-		if (amount < 0 || amount > 1) {
-			throw new IllegalArgumentException("`amount` must be in range [0, 1].");
-		}
-
-		this.validationAmount = amount;
 		return this;
 	}
 }
