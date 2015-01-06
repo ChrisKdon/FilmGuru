@@ -22,7 +22,7 @@ public class BasicMovieDetail {
 		this.movieTitle = movieTitle;
 		this.moviePosterFile = moviePosterFile;
 
-		int rating = db.ratings.getRatingOrDefault(username, movieId, -1);
+		int rating = db.ratings.getOrDefault(username, movieId, -1);
 		this.isUserRating = rating >= 0;
 
 		if (!isUserRating) {
@@ -30,5 +30,9 @@ public class BasicMovieDetail {
 		}
 
 		this.rating = rating;
+	}
+
+	public int getMovieId() {
+		return movieId;
 	}
 }

@@ -10,9 +10,11 @@ public final class MovieDatabase {
 	private static MovieDatabase instance;
 
 	public final RatingsTable ratings;
+	public final MovieTable movies;
 
 	private MovieDatabase() {
 		this.ratings = RatingsTable.getTable();
+		this.movies = MovieTable.getTable();
 	}
 
 	public synchronized static MovieDatabase getDb() {

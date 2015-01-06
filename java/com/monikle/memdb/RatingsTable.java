@@ -26,7 +26,7 @@ public final class RatingsTable {
 		return instance;
 	}
 
-	public synchronized void setRating(String username, int movieId, int rating) {
+	public synchronized void save(String username, int movieId, int rating) {
 		Map<Integer, Integer> ratingForUser = userRatings.getOrDefault(username, new HashMap<>());
 		ratingForUser.put(movieId, rating);
 		userRatings.putIfAbsent(username, ratingForUser);
@@ -34,7 +34,15 @@ public final class RatingsTable {
 		ratingModifications.put(username, ratingModifications.getOrDefault(username, 0L) + 1);
 	}
 
-	public synchronized int getRatingOrDefault(String username, int movieId, int defaultRating) {
+	/**
+	 * Return the rating for a user and movie.
+	 *
+	 * @param username
+	 * @param movieId
+	 * @param defaultRating
+	 * @return
+	 */
+	public synchronized int getOrDefault(String username, int movieId, int defaultRating) {
 		return userRatings
 				.getOrDefault(username, new HashMap<>())
 				.getOrDefault(movieId, defaultRating);
