@@ -1,4 +1,4 @@
-package com.monikle.webserver.models;
+package com.monikle.models;
 
 import java.util.Optional;
 

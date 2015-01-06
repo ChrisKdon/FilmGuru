@@ -13,8 +13,14 @@
 }
 
 #movie-box {
+  @moviePosterWidth: 140px;
+  @moviePosterHeight: 195px;
+
+  display: table;
+  margin: 0 auto;
   position: relative;
   padding: 0;
+  width: (@moviePosterWidth * 6) + 100;
 
   .nav-btn {
     position: absolute;
@@ -49,8 +55,6 @@
 
     .movie {
       @titleBackground: black;
-      @moviePosterWidth: 140px;
-      @moviePosterHeight: 195px;
 
       display: inline-block;
       margin: 5px 10px;

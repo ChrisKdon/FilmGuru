@@ -1,6 +1,6 @@
 package com.monikle.memdb;
 
-import com.monikle.webserver.models.MovieDetail;
+import com.monikle.models.MovieDetail;
 
 import java.util.HashMap;
 import java.util.Map;

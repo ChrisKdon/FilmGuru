@@ -3,8 +3,8 @@ package com.monikle.webserver.rater;
 import com.monikle.memdb.MovieDatabase;
 import com.monikle.neuro.*;
 import com.monikle.webserver.Config;
-import com.monikle.webserver.models.MovieDetail;
-import com.monikle.webserver.models.MovieRating;
+import com.monikle.models.MovieDetail;
+import com.monikle.models.MovieRating;
 
 import java.util.List;
 import java.util.Map;

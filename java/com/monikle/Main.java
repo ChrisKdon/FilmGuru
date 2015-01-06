@@ -1,19 +1,19 @@
 package com.monikle;
 
 import com.monikle.memdb.MovieDatabase;
+import com.monikle.memdb.UserTable;
+import com.monikle.models.MovieDetail;
 import com.monikle.neuro.NeuralNetwork;
 import com.monikle.webserver.Config;
-import com.monikle.webserver.models.MovieDetail;
 import com.monikle.webserver.rater.MovieRaterFactory;
 import com.monikle.webserver.tmdb.MovieAPI;
 import com.monikle.webserver.transformers.JsonTransformer;
 import com.monikle.webserver.viewmodels.MovieViewModel;
-import spark.Route;
+import spark.Response;
 
 import java.util.List;
 
-import static spark.Spark.externalStaticFileLocation;
-import static spark.Spark.get;
+import static spark.Spark.*;
 
 public class Main {
 	public static NeuralNetwork net;
@@ -30,23 +30,69 @@ public class Main {
 		String DEBUG_USERNAME = "test";
 
 		/**
+		 * Redirect to either login or the main app
+		 */
+		get("/", (req, res) -> {
+			if (req.session().attribute("username") == null) {
+				res.redirect("/login.html");
+			} else {
+				res.redirect("/app.html");
+			}
+
+			return null;
+		});
+
+		post("/userlogin", (req, res) -> {
+			UserTable users = UserTable.getTable();
+
+			String[] parts = req.body().split("&");
+			String username = parts[0].replace("username=", "").trim();
+			String password = parts[1].replace("password=", "").trim();
+
+			String error = null;
+			if (username.length() <= 0 || password.length() <= 0) {
+				error = "incomplete";
+			} else if (users.exists(username) && !users.login(username, password)) {
+				error = "wrongpass";
+			}
+
+			if (error != null) {
+				res.redirect("/login.html?error=" + error);
+				return null;
+			}
+
+			req.session().attribute("username", "test");
+			res.redirect("/");
+
+			return null;
+		});
+
+		/**
 		 * Get the popular movies
 		 */
-		jsonGet("/movies/popular/:page", (req, res) -> {
+		get("/movies/popular/:page", "application/json", (req, res) -> {
+			if (!gaurdUsername(req, res)) {
+				return "error";
+			}
+
 			List<MovieDetail> popular = MovieAPI.popular(Integer.parseInt(req.params("page")));
-			return popular.parallelStream().map(movie -> new MovieViewModel(DEBUG_USERNAME, movie)).toArray();
-		});
+			return popular.parallelStream().map(movie -> new MovieViewModel(req.session().attribute("username"), movie)).toArray();
+		}, new JsonTransformer());
 
 		/**
 		 * Rate a movie
 		 */
 		get("/users/rate/movie/:id", (req, res) -> {
+			if (!gaurdUsername(req, res)) {
+				return "error";
+			}
+
 			MovieDatabase db = MovieDatabase.getDb();
 
 			int movieId = Integer.parseInt(req.params("id"));
 			int rating = Integer.parseInt(req.queryParams("rating"));
 
-			db.ratings.save(DEBUG_USERNAME, movieId, rating); // Update rating
+			db.ratings.save(req.session().attribute("username"), movieId, rating); // Update rating
 
 			// Train the rater
 			long modCount = db.ratings.modificationCount(DEBUG_USERNAME);
@@ -54,11 +100,17 @@ public class Main {
 				MovieRaterFactory.getForUsername(DEBUG_USERNAME).train();
 			}
 
-			return "ok";
+			return "done";
 		});
 	}
 
-	private static void jsonGet(String path, Route route) {
-		get(path, "application/json", route, new JsonTransformer());
+	private static boolean gaurdUsername(spark.Request request, Response response) {
+		if (request.session().attribute("username") == null) {
+			response.status(401);
+			response.body("Unauthorized");
+			return false;
+		}
+
+		return true;
 	}
 }

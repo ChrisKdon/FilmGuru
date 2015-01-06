@@ -1,6 +1,6 @@
 package com.monikle.memdb;
 
-import com.monikle.webserver.models.MovieRating;
+import com.monikle.models.MovieRating;
 import com.monikle.webserver.tmdb.MovieAPI;
 
 import java.util.*;

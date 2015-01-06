@@ -2,7 +2,7 @@ package com.monikle.webserver.tmdb;
 
 import com.mashape.unirest.http.Unirest;
 import com.monikle.memdb.MovieDatabase;
-import com.monikle.webserver.models.MovieDetail;
+import com.monikle.models.MovieDetail;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

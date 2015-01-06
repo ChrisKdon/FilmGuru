@@ -1,7 +1,7 @@
 package com.monikle.webserver.viewmodels;
 
 import com.monikle.memdb.MovieDatabase;
-import com.monikle.webserver.models.MovieDetail;
+import com.monikle.models.MovieDetail;
 import com.monikle.webserver.rater.MovieRaterFactory;
 
 import java.util.Optional;
