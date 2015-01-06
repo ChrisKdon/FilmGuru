@@ -15,8 +15,7 @@ import java.util.List;
 public class MovieAPI {
 	private static String API_KEY = "b49b1c4bca7553daf26632cf8237e6e6";
 
-	private MovieAPI() {
-	}
+	private MovieAPI() {}
 
 	public static ExtendedMovieDetail movie(String username, int movieId) throws Exception {
 		JSONObject result = Unirest.get("http://api.themoviedb.org/3/movie/{id}")
@@ -24,10 +23,21 @@ public class MovieAPI {
 				.routeParam("id", Integer.toString(movieId))
 				.asJson().getBody().getObject();
 
+		List<String> genres = new ArrayList<>(20);
+		JSONArray genreArray = result.getJSONArray("genres");
+		for(int i = 0; i < genreArray.length(); i++) {
+			genres.add(genreArray.getJSONObject(i).getString("name"));
+		}
+
+		int year = Integer.parseInt(result.getString("release_date").substring(0, 3));
+		boolean isEnglish = result.getString("original_language").equals("en");
+
 		return new ExtendedMovieDetail(username, movieId,
 				result.getString("title"),
 				result.getString("poster_path"),
-				result.getString("imdb_id"));
+				result.getString("imdb_id"),
+				genres.stream().toArray(size -> new String[size]),
+				year, isEnglish);
 	}
 
 	public static List<ExtendedMovieDetail> popular(String username, int page) throws Exception {

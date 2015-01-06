@@ -26,9 +26,9 @@ public class Main {
 			int movieId = Integer.parseInt(req.params("id"));
 			int rating = Integer.parseInt(req.queryParams("rating"));
 
-			db.setRating(DEBUG_USERNAME, movieId, rating); // Update rating
+			db.ratings.setRating(DEBUG_USERNAME, movieId, rating); // Update rating
 
-			long modCount = db.modificationCount(DEBUG_USERNAME);
+			long modCount = db.ratings.modificationCount(DEBUG_USERNAME);
 			if(modCount > 0 && modCount % Config.UPDATE_NET_MODIFICATION_COUNT == 0) {
 				// TODO: Train Neural Network
 			}

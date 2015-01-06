@@ -1,52 +1,25 @@
 package com.monikle.memdb;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Singleton of the movie database.
- *
+ * <p>
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */
 public final class MovieDatabase {
 	private static MovieDatabase instance;
 
-	private Map<String, Map<Integer, Integer>> userRatings; // <Username, <Movie ID, Rating>>
-	private Map<String, Long> ratingModifications; 					// <Username, Modification Count>
+	public final RatingsTable ratings;
 
 	private MovieDatabase() {
-		this.userRatings = new HashMap<>();
-		this.ratingModifications = new HashMap<>();
+		this.ratings = RatingsTable.getTable();
 	}
 
 	public synchronized static MovieDatabase getDb() {
-		if(instance == null) {
+		if (instance == null) {
 			instance = new MovieDatabase();
 		}
 
 		return instance;
-	}
-
-	public synchronized void setRating(String username, int movieId, int rating) {
-		Map<Integer, Integer> ratingForUser = userRatings.getOrDefault(username, new HashMap<>());
-		ratingForUser.put(movieId, rating);
-		userRatings.putIfAbsent(username, ratingForUser);
-
-		ratingModifications.put(username, ratingModifications.getOrDefault(username, 0L) + 1);
-	}
-
-	public synchronized int getRatingOrDefault(String username, int movieId, int defaultRating) {
-		return userRatings
-				.getOrDefault(username, new HashMap<>())
-				.getOrDefault(movieId, defaultRating);
-	}
-
-	public synchronized long modificationCount(String username) {
-		return ratingModifications.getOrDefault(username, 0L);
-	}
-
-	public synchronized int recordCountFor(String username) {
-		return userRatings.getOrDefault(username, new HashMap<>()).size();
 	}
 }
