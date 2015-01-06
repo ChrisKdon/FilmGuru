@@ -16,7 +16,7 @@ public class Main {
 		externalStaticFileLocation("./public"); // Static files
 
 		// TODO: Get username
-		jsonGet("/movies/random", (req, res) -> MovieAPI.popular("test", 1));
+		jsonGet("/movies/popular/:page", (req, res) -> MovieAPI.popular("test", Integer.parseInt(req.params("page"))));
 	}
 
 	private static void jsonGet(String path, Route route) {

@@ -12,52 +12,85 @@
   }
 }
 
-.movies {
-  background-color: lighten(lightgrey, 15%);
+#movie-box {
+  position: relative;
+  padding: 0;
 
-  .movie {
-    @titleBackground: black;
-    @moviePosterWidth: 140px;
-    @moviePosterHeight: 195px;
+  .nav-btn {
+    position: absolute;
+    height: 100%;
+    width: 70px;
+    background-color: rgba(0, 0, 0, 0.1);
+    text-align: center;
+    text-transform: uppercase;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
 
-    float: left;
-    margin: 5px 10px;
-    border: solid 1px @titleBackground;
-    width: @moviePosterWidth;
-    height: @moviePosterHeight + 80px;
-    padding-bottom: 5px;
 
-    img.poster {
-      width: @moviePosterWidth;
-      height: @moviePosterHeight;
+    &:hover {
+      background-color: rgb(52, 152, 219);
     }
+  }
 
-    .title {
+  #back-btn {
+    left: 0;
+    display: none;
+  }
+
+  #next-btn {
+    right: 0;
+  }
+
+  .movies {
+    width: 100%;
+    background-color: lighten(lightgrey, 15%);
+    text-align: center;
+
+    .movie {
+      @titleBackground: black;
+      @moviePosterWidth: 140px;
+      @moviePosterHeight: 195px;
+
+      display: inline-block;
+      margin: 5px 10px;
+      border: solid 1px @titleBackground;
       width: @moviePosterWidth;
-      white-space: nowrap;
-      background-color: @titleBackground;
-      color: white;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      padding: 1px 5px;
-    }
+      height: @moviePosterHeight + 80px;
+      padding-bottom: 5px;
 
-    .rating-section {
-      text-align: center;
-
-      .star-rating {
-        color: red;       // Color of guessed ratings
-        font-size: 20px;
-        cursor: pointer;
-
-        &:hover, &.user {
-          color: orange; // Color of actual ratings from the user
-        }
+      img.poster {
+        width: @moviePosterWidth;
+        height: @moviePosterHeight;
       }
 
-      [type='button'].not-interested {
-        padding: 0 20px;
-        height: 25px;
+      .title {
+        width: @moviePosterWidth;
+        white-space: nowrap;
+        background-color: @titleBackground;
+        color: white;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 1px 5px;
+      }
+
+      .rating-section {
+        text-align: center;
+
+        .star-rating {
+          color: red; // Color of guessed ratings
+          font-size: 20px;
+          cursor: pointer;
+
+          &:hover, &.user {
+            color: orange; // Color of actual ratings from the user
+          }
+        }
+
+        [type='button'].not-interested {
+          padding: 0 20px;
+          height: 25px;
+        }
       }
     }
   }

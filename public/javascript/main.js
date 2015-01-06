@@ -1,4 +1,11 @@
 (function () {
+	var $btnPageNext = $("#next-btn");
+	var $btnPageBack = $("#back-btn");
+
+	var session = {
+		page: 1
+	};
+
 	/**
 	 * Render the star rating controls
 	 */
@@ -14,18 +21,50 @@
 	}
 
 	/**
-	 * Load random movies from the server.
-	 *
-	 * @param onComplete
+	 * Load popular movies from the server
 	 */
-	function loadRandomMovies(onComplete) {
-		$.getJSON("movies/random", onComplete);
+	function loadPopularMovies(page) {
+		$.getJSON("movies/popular/" + page, function(movies) {
+			$("#movie-list-holder").html(templates.movieList({movies:movies}));
+			initRatingControls();
+		});
+	}
+
+	function renderPageControls() {
+		if(session.page === 1) {
+			$btnPageBack.hide();
+			$btnPageNext.show();
+		} else if(session.page === 1000) {
+			$btnPageBack.show();
+			$btnPageNext.hide();
+		} else {
+			$btnPageBack.show();
+			$btnPageNext.show();
+		}
+	}
+
+	function onBackPressed() {
+		if(session.page > 1) {
+			session.page -= 1;
+			loadPopularMovies(session.page);
+		}
+
+		renderPageControls();
+	}
+
+	function onNextPressed() {
+		if(session.page < 1000) {
+			session.page += 1;
+			loadPopularMovies(session.page);
+		}
+
+		renderPageControls();
 	}
 
 	$(function () {
-		loadRandomMovies(function(movies) {
-			$("#movieList").html(templates.movieList({movies:movies}));
-			initRatingControls();
-		});
+		loadPopularMovies(session.page);
+
+		$btnPageBack.click(onBackPressed);
+		$btnPageNext.click(onNextPressed);
 	});
 })();

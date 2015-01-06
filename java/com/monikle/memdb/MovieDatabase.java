@@ -37,4 +37,8 @@ public final class MovieDatabase {
 				.getOrDefault(username, new HashMap<>())
 				.getOrDefault(movieId, defaultRating);
 	}
+
+	public int recordCountFor(String username) {
+		return userRatings.getOrDefault(username, new HashMap<>()).size();
+	}
 }
