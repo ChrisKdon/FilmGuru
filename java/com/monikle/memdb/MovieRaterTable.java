@@ -1,6 +1,5 @@
 package com.monikle.memdb;
 
-import com.monikle.neuro.NeuralNetwork;
 import com.monikle.webserver.rater.MovieRater;
 
 import java.util.HashMap;

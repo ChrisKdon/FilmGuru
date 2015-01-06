@@ -1,10 +1,7 @@
 package com.monikle;
 
 import com.monikle.memdb.MovieDatabase;
-import com.monikle.neuro.FeedForwardNetwork;
 import com.monikle.neuro.NeuralNetwork;
-import com.monikle.neuro.TrainerConfiguration;
-import com.monikle.neuro.TrainingData;
 import com.monikle.webserver.Config;
 import com.monikle.webserver.models.MovieDetail;
 import com.monikle.webserver.rater.MovieRaterFactory;
@@ -32,11 +29,17 @@ public class Main {
 
 		String DEBUG_USERNAME = "test";
 
-		jsonGet("/movies/popular/:page", (req, res) ->  {
+		/**
+		 * Get the popular movies
+		 */
+		jsonGet("/movies/popular/:page", (req, res) -> {
 			List<MovieDetail> popular = MovieAPI.popular(Integer.parseInt(req.params("page")));
 			return popular.parallelStream().map(movie -> new MovieViewModel(DEBUG_USERNAME, movie)).toArray();
 		});
 
+		/**
+		 * Rate a movie
+		 */
 		get("/users/rate/movie/:id", (req, res) -> {
 			MovieDatabase db = MovieDatabase.getDb();
 

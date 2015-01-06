@@ -41,7 +41,7 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 	}
 
 	@Override
-	public void train(TrainerConfiguration config) {
+	public TrainingResult train(TrainerConfiguration config) {
 		if (config.getShuffleTrainingData()) {
 			config.getTrainingData().shuffle();
 		}
@@ -52,6 +52,7 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 		Vector[] validationOutputs = trainingData.parallelStream().map(s -> s.getOutputs()).toArray(size -> new Vector[size]);
 
 		// Run Training
+		double epochError = 0;
 		for (int epoch = 0; epoch < config.getMaxEpochs(); epoch++) {
 			Collections.shuffle(trainingData);
 
@@ -75,11 +76,13 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 			}
 
 			// Calculate Error
-			double epochError = computeEpochError(validationOutputs, runMultiple(validationInputs));
+			epochError = computeEpochError(validationOutputs, runMultiple(validationInputs));
 			if (epochError <= config.getAcceptableError()) { // Within acceptable error bounds
-				return;
+				return new TrainingResult(epoch, epochError);
 			}
 		}
+
+		return new TrainingResult(config.getMaxEpochs(), epochError);
 	}
 
 	private Matrix backPropWeights(Vector input, Matrix weights, Vector delta) {

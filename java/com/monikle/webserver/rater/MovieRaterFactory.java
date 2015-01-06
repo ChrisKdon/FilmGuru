@@ -20,8 +20,14 @@ public final class MovieRaterFactory {
 		if(optRater.isPresent()) {
 			return optRater.get();
 		} else {
-			MovieRater rater = new MovieRater(username, Config.MAX_RATING,
-					Config.HIDDEN_NODE_COUNT, Config.LEARNING_RATE, Config.MOMENTUM);
+			MovieRater rater = new MovieRater(username,
+					Config.MAX_RATING,
+					Config.HIDDEN_NODE_COUNT,
+					Config.LEARNING_RATE,
+					Config.MOMENTUM,
+					Config.ACCEPTABLE_ERROR,
+					Config.MAX_EPOCHS,
+					Config.MAX_RETRIES);
 
 			raterTable.save(username, rater);
 			return rater;

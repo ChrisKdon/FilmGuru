@@ -1,7 +1,5 @@
 package com.monikle.webserver.models;
 
-import com.monikle.memdb.MovieDatabase;
-
 /**
  * Author:    Chris Kellendonk
  * Student #: 4810800

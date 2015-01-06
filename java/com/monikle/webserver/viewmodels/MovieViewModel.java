@@ -1,10 +1,7 @@
 package com.monikle.webserver.viewmodels;
 
 import com.monikle.memdb.MovieDatabase;
-import com.monikle.memdb.RatingsTable;
-import com.monikle.neuro.NeuralNetwork;
 import com.monikle.webserver.models.MovieDetail;
-import com.monikle.webserver.rater.MovieRater;
 import com.monikle.webserver.rater.MovieRaterFactory;
 
 import java.util.Optional;

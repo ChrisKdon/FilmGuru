@@ -1,11 +1,7 @@
 package com.monikle.webserver.rater;
 
 import com.monikle.memdb.MovieDatabase;
-import com.monikle.neuro.FeedForwardNetwork;
-import com.monikle.neuro.NeuralNetwork;
-import com.monikle.neuro.TrainerConfiguration;
-import com.monikle.neuro.TrainingData;
-import com.monikle.neuro.math.Vector;
+import com.monikle.neuro.*;
 import com.monikle.webserver.Config;
 import com.monikle.webserver.models.MovieDetail;
 import com.monikle.webserver.models.MovieRating;
@@ -21,48 +17,130 @@ public final class MovieRater {
 	private static MovieDatabase db = MovieDatabase.getDb();
 
 	private final String username;
-	private final NeuralNetwork network;
 	private final Map<String, Integer> nodeIndices;
-	private final int inputCount, outputCount;
+	private final int inputCount, hiddenCount, outputCount;
 	private final int minYear, maxYear;
+	private final double learningRate, momentum;
+	private final double acceptableError;
+	private final int maxEpochs, maxRetries;
+
+	private volatile boolean isTraining; // Is the network in the process of being trained
+	private NeuralNetwork network;
 
 	public MovieRater(String username, int maxRating, int hiddenNodeCount,
-										double learningRate, double momentum) {
+										double learningRate, double momentum, double acceptableError, int maxEpochs, int maxRetries) {
 
 		this.nodeIndices = Config.NODE_INDICES;
 		this.inputCount = Config.NODE_INDICES.size();
+		this.hiddenCount = hiddenNodeCount;
+		this.outputCount = maxRating;
+		this.learningRate = learningRate;
+		this.momentum = momentum;
+		this.acceptableError = acceptableError;
+		this.maxEpochs = maxEpochs;
+		this.maxRetries = maxRetries;
+
 		this.minYear = Config.MIN_YEAR;
 		this.maxYear = Config.MAX_YEAR;
-		this.outputCount = maxRating;
 
 		this.username = username;
 
-		this.network = new FeedForwardNetwork(inputCount, hiddenNodeCount, maxRating, learningRate, momentum);
+		this.network = createNetwork();
+
+		this.isTraining = false;
+	}
+
+	private static double scale(double iMin, double iMax, double min, double max, double input) {
+		if (max < min) {
+			throw new IllegalArgumentException("Max must be less than min.");
+		}
+
+		if (input < iMin || input > iMax) {
+			throw new IllegalArgumentException("Input must be in range [" + iMin + ", " + iMax + "]. Was: " + input);
+		}
+
+		return (((max - min) * (input - iMin)) / (iMax - iMin)) + min;
+	}
+
+	private static int getRatingFromResult(double[] networkResult) {
+		double max = 0;
+		int rating = 0;
+
+		for (int i = 0; i < networkResult.length; i++) {
+			if (networkResult[i] >= max) {
+				rating = i + 1;
+				max = networkResult[i];
+			}
+		}
+
+		return rating;
+	}
+
+	private NeuralNetwork createNetwork() {
+		return new FeedForwardNetwork(inputCount, hiddenCount, outputCount, learningRate, momentum);
 	}
 
 	/**
-	 * Train the rater on any new input information.
+	 * Train the rater on any new input information. This runs in it's own thread so it will not block web requests
 	 *
 	 * @throws Exception
 	 */
 	public void train() throws Exception {
-		List<MovieRating> ratings = db.ratings.getMovieRatings(username);
+		if(!isTraining) {
+			new Thread(() -> {
+				try {
+					isTraining = true;
 
-		TrainingData data = new TrainingData();
+					List<MovieRating> ratings = db.ratings.getMovieRatings(username);
 
-		ratings.forEach(rating -> {
-			data.add(mapMovieToNetworkInput(rating.getMovie()), mapRatingToNetworkOutput(rating.getRating().orElse(0)));
-		});
+					TrainingData data = new TrainingData();
 
-		TrainerConfiguration config = TrainerConfiguration.create(data)
-				.setAcceptableError(1)
-				.setMaxEpochs(1000)
-				.setShuffleTrainingData(true);
+					ratings.forEach(rating -> {
+						data.add(mapMovieToNetworkInput(rating.getMovie()), mapRatingToNetworkOutput(rating.getRating().orElse(0)));
+					});
 
-		network.train(config);
+					TrainerConfiguration config = TrainerConfiguration.create(data)
+							.setAcceptableError(acceptableError)
+							.setMaxEpochs(maxEpochs)
+							.setShuffleTrainingData(true);
+
+					TrainingResult bestResult = null;
+					NeuralNetwork bestNet = null;
+
+					for(int i = 0; i < maxRetries + 1; i++) {
+						NeuralNetwork tempNet = createNetwork();
+						TrainingResult result = tempNet.train(config);
+
+						// Have we met the acceptable error
+						if(result.getError() <= acceptableError) {
+							bestResult = result;
+							bestNet = tempNet;
+							break;
+						}
+
+						// Save the best network that has been found so far
+						if(bestResult == null || result.getError() < bestResult.getError()) {
+							bestResult = result;
+							bestNet = tempNet;
+						}
+
+						System.out.println("Retry");
+					}
+
+					// Update the current network
+					synchronized (MovieRater.this) {
+						MovieRater.this.network = bestNet;
+					}
+				} catch (Exception ex) {
+					throw new RuntimeException(ex);
+				} finally {
+					isTraining = false;
+				}
+			}).start();
+		}
 	}
 
-	public int getRating(MovieDetail movie) {
+	public synchronized int getRating(MovieDetail movie) {
 		return getRatingFromResult(network.run(mapMovieToNetworkInput(movie)).getValues());
 	}
 
@@ -113,31 +191,5 @@ public final class MovieRater {
 				writeTo[index] = 1;
 			}
 		}
-	}
-
-	private static double scale(double iMin, double iMax, double min, double max, double input) {
-		if(max < min) {
-			throw new IllegalArgumentException("Max must be less than min.");
-		}
-
-		if(input < iMin || input > iMax) {
-			throw new IllegalArgumentException("Input must be in range [" + iMin + ", " + iMax + "]. Was: " + input);
-		}
-
-		return (((max - min)*(input - iMin))/(iMax - iMin)) + min;
-	}
-
-	private static int getRatingFromResult(double[] networkResult) {
-		double max = 0;
-		int rating = 0;
-
-		for (int i = 0; i < networkResult.length; i++) {
-			if (networkResult[i] >= max) {
-				rating = i + 1;
-				max = networkResult[i];
-			}
-		}
-
-		return rating;
 	}
 }
