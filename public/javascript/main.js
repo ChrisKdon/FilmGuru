@@ -23,18 +23,23 @@
 	/**
 	 * Load popular movies from the server
 	 */
-	function loadPopularMovies(page) {
-		$.getJSON("movies/popular/" + page, function(movies) {
-			$("#movie-list-holder").html(templates.movieList({movies:movies}));
+	function loadPopularMovies(page, onLoadComplete) {
+		$.getJSON("movies/popular/" + page, function (movies) {
+			$("#movie-list-holder").html(templates.movieList({movies: movies}));
 			initRatingControls();
+
+			if(onLoadComplete) { onLoadComplete(); }
 		});
 	}
 
+	/**
+	 * Show/Hide page controls based on page number
+	 */
 	function renderPageControls() {
-		if(session.page === 1) {
+		if (session.page === 1) {
 			$btnPageBack.hide();
 			$btnPageNext.show();
-		} else if(session.page === 1000) {
+		} else if (session.page === 1000) {
 			$btnPageBack.show();
 			$btnPageNext.hide();
 		} else {
@@ -44,7 +49,7 @@
 	}
 
 	function onBackPressed() {
-		if(session.page > 1) {
+		if (session.page > 1) {
 			session.page -= 1;
 			loadPopularMovies(session.page);
 		}
@@ -53,7 +58,7 @@
 	}
 
 	function onNextPressed() {
-		if(session.page < 1000) {
+		if (session.page < 1000) {
 			session.page += 1;
 			loadPopularMovies(session.page);
 		}
@@ -61,10 +66,28 @@
 		renderPageControls();
 	}
 
-	$(function () {
-		loadPopularMovies(session.page);
+	function saveRating(movieId, rating) {
+		$.get("/users/rate/movie/" + movieId + "?rating=" + rating);
+	}
 
-		$btnPageBack.click(onBackPressed);
-		$btnPageNext.click(onNextPressed);
+	/**
+	 * Called when a star rating for a movie is changed
+	 */
+	function onStarRatingChange() {
+		var rating = parseInt($(this).val(), 10);
+		var movieId = $(this).data("movieid");
+
+		saveRating(movieId, rating);
+
+		$("#movie-" + movieId + " .star-rating").addClass("user");
+	}
+
+	$(function () {
+		loadPopularMovies(session.page, function() {
+			$btnPageBack.click(onBackPressed);
+			$btnPageNext.click(onNextPressed);
+
+			$(".rating").change(onStarRatingChange);
+		});
 	});
 })();

@@ -22,9 +22,11 @@
 
 			<div class="rating-section">
 				<div class="star-rating {{#if isUserRating}}user{{/if}}">
-				<input class="rating" value="{{rating}}" type="number" data-max="5" data-min="1">
+				<input class="rating" value="{{rating}}" data-movieId="{{movieId}}" type="number" data-max="5" data-min="1">
 				</div>
-				<input class="btn btn-default not-interested" type="button" value="Not Interested" data-value="0"/>
+				<!--
+					<input class="btn btn-default not-interested" type="button" data-movieId="{{movieId}}" value="Not Interested" data-value="0"/>
+					-->
 			</div>
 		</div>
 	</script>
