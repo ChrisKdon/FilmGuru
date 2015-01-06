@@ -18,6 +18,8 @@
 			showCaption: false,
 			size: "xs"
 		});
+
+		$(".rating").change(onStarRatingChange);
 	}
 
 	/**
@@ -86,8 +88,6 @@
 		loadPopularMovies(session.page, function() {
 			$btnPageBack.click(onBackPressed);
 			$btnPageNext.click(onNextPressed);
-
-			$(".rating").change(onStarRatingChange);
 		});
 	});
 })();
