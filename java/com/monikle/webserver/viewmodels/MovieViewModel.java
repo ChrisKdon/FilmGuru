@@ -1,7 +1,11 @@
 package com.monikle.webserver.viewmodels;
 
+import com.monikle.memdb.MovieDatabase;
 import com.monikle.memdb.RatingsTable;
+import com.monikle.neuro.NeuralNetwork;
 import com.monikle.webserver.models.MovieDetail;
+import com.monikle.webserver.rater.MovieRater;
+import com.monikle.webserver.rater.MovieRaterFactory;
 
 import java.util.Optional;
 
@@ -10,7 +14,7 @@ import java.util.Optional;
  * Student #: 4810800
  */
 public final class MovieViewModel {
-	private static RatingsTable ratingsTable = RatingsTable.getTable();
+	private static MovieDatabase db = MovieDatabase.getDb();
 
 	private int movieId;            // ID of the movie on tmdb.org
 	private String movieTitle;      // The name of the movie
@@ -26,17 +30,17 @@ public final class MovieViewModel {
 		this.imdbUrl = "http://www.imdb.com/title/" + movie.getImdbId();
 
 		// Get movie rating from either the user or the estimate form the neural net
-		Optional<Integer> rating = ratingsTable.getRating(username, movieId);
+		Optional<Integer> rating = db.ratings.getRating(username, movieId);
 		if(rating.isPresent()) {
 			this.isUserRating = true;
 			this.rating = rating.get();
 		} else {
 			this.isUserRating = false;
-			this.rating = estimateRating();
+			this.rating = estimateRating(username, movie);
 		}
 	}
 
-	private int estimateRating() {
-		return 0; // TODO
+	private static int estimateRating(String username, MovieDetail movie) {
+		return MovieRaterFactory.getForUsername(username).getRating(movie);
 	}
 }

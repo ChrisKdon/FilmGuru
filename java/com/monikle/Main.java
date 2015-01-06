@@ -7,6 +7,7 @@ import com.monikle.neuro.TrainerConfiguration;
 import com.monikle.neuro.TrainingData;
 import com.monikle.webserver.Config;
 import com.monikle.webserver.models.MovieDetail;
+import com.monikle.webserver.rater.MovieRaterFactory;
 import com.monikle.webserver.tmdb.MovieAPI;
 import com.monikle.webserver.transformers.JsonTransformer;
 import com.monikle.webserver.viewmodels.MovieViewModel;
@@ -44,11 +45,10 @@ public class Main {
 
 			db.ratings.save(DEBUG_USERNAME, movieId, rating); // Update rating
 
+			// Train the rater
 			long modCount = db.ratings.modificationCount(DEBUG_USERNAME);
 			if (modCount > 0 && modCount % Config.UPDATE_NET_MODIFICATION_COUNT == 0) {
-				TrainingData data = new TrainingData();
-
-//				TrainerConfiguration trainingConfig = TrainerConfiguration.create()
+				MovieRaterFactory.getForUsername(DEBUG_USERNAME).train();
 			}
 
 			return "ok";

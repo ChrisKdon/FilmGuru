@@ -11,10 +11,14 @@ public final class MovieDatabase {
 
 	public final RatingsTable ratings;
 	public final MovieTable movies;
+	public final NeuralNetTable neuralNets;
+	public final MovieRaterTable raters;
 
 	private MovieDatabase() {
 		this.ratings = RatingsTable.getTable();
 		this.movies = MovieTable.getTable();
+		this.neuralNets = NeuralNetTable.getTable();
+		this.raters = MovieRaterTable.getTable();
 	}
 
 	public synchronized static MovieDatabase getDb() {
