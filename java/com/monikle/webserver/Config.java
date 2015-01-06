@@ -10,7 +10,7 @@ import java.util.Map;
 public final class Config {
 	public static final int UPDATE_NET_MODIFICATION_COUNT = 10; 	// Update the neural net every X modifications
 
-	public static final Map<String, Integer> nodeIndices = new HashMap<>(); // Node Name -> Node Index
+	public static final Map<String, Integer> NODE_INDICES = new HashMap<>(); // Node Name -> Node Index
 
 	{
 		// Movie Genres
@@ -42,6 +42,6 @@ public final class Config {
 
 	private static int nodeIndexCounter = 0;
 	private static void mapNodeToIndex(String name) {
-		nodeIndices.put(name.toLowerCase(), nodeIndexCounter++);
+		NODE_INDICES.put(name.toLowerCase(), nodeIndexCounter++);
 	}
 }

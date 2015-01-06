@@ -1,6 +1,10 @@
 package com.monikle.memdb;
 
+import com.monikle.webserver.models.MovieRating;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,7 +15,7 @@ public final class RatingsTable {
 	private static RatingsTable instance;
 
 	private Map<String, Map<Integer, Integer>> userRatings; // <Username, <Movie ID, Rating>>
-	private Map<String, Long> ratingModifications; 					// <Username, Modification Count>
+	private Map<String, Long> ratingModifications;          // <Username, Modification Count>
 
 	private RatingsTable() {
 		this.userRatings = new HashMap<>();
@@ -19,7 +23,7 @@ public final class RatingsTable {
 	}
 
 	public synchronized static RatingsTable getTable() {
-		if(instance == null) {
+		if (instance == null) {
 			instance = new RatingsTable();
 		}
 
@@ -42,10 +46,18 @@ public final class RatingsTable {
 	 * @param defaultRating
 	 * @return
 	 */
-	public synchronized int getOrDefault(String username, int movieId, int defaultRating) {
+	public synchronized int getRatingOrDefault(String username, int movieId, int defaultRating) {
 		return userRatings
 				.getOrDefault(username, new HashMap<>())
 				.getOrDefault(movieId, defaultRating);
+	}
+
+	public synchronized List<MovieRating> getMovieRatings(String username) {
+		List<MovieRating> movieRatings = new ArrayList<>();
+
+		//userRatings.get(username)
+
+		return movieRatings;
 	}
 
 	public synchronized long modificationCount(String username) {

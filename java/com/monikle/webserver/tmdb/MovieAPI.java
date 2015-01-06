@@ -2,7 +2,7 @@ package com.monikle.webserver.tmdb;
 
 import com.mashape.unirest.http.Unirest;
 import com.monikle.memdb.MovieDatabase;
-import com.monikle.webserver.models.ExtendedMovieDetail;
+import com.monikle.webserver.models.MovieDetail;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,12 +18,13 @@ public class MovieAPI {
 	private static MovieDatabase db = MovieDatabase.getDb();
 	private static String API_KEY = "b49b1c4bca7553daf26632cf8237e6e6";
 
-	private MovieAPI() {}
+	private MovieAPI() {
+	}
 
-	public static ExtendedMovieDetail movie(String username, int movieId) throws Exception {
-		Optional<ExtendedMovieDetail> movieOpt = db.movies.get(movieId); // Check cache
+	public static MovieDetail movie(int movieId) throws Exception {
+		Optional<MovieDetail> movieOpt = db.movies.get(movieId); // Check cache
 
-		if(!movieOpt.isPresent()) {
+		if (!movieOpt.isPresent()) {
 			JSONObject result = Unirest.get("http://api.themoviedb.org/3/movie/{id}")
 					.queryString("api_key", API_KEY)
 					.routeParam("id", Integer.toString(movieId))
@@ -38,7 +39,7 @@ public class MovieAPI {
 			int year = Integer.parseInt(result.getString("release_date").substring(0, 3));
 			boolean isEnglish = result.getString("original_language").equals("en");
 
-			ExtendedMovieDetail movie = new ExtendedMovieDetail(username, movieId,
+			MovieDetail movie = new MovieDetail(movieId,
 					result.getString("title"),
 					result.getString("poster_path"),
 					result.getString("imdb_id"),
@@ -53,19 +54,19 @@ public class MovieAPI {
 		}
 	}
 
-	public static List<ExtendedMovieDetail> popular(String username, int page) throws Exception {
+	public static List<MovieDetail> popular(int page) throws Exception {
 		JSONObject result = Unirest.get("http://api.themoviedb.org/3/movie/popular")
 				.queryString("api_key", API_KEY)
 				.queryString("page", page)
 				.asJson().getBody().getObject();
 
-		List<ExtendedMovieDetail> movies = new ArrayList<>();
+		List<MovieDetail> movies = new ArrayList<>();
 
 		JSONArray popularMovies = result.getJSONArray("results");
 		for (int i = 0; i < popularMovies.length(); i++) {
 			JSONObject m = popularMovies.getJSONObject(i);
 			int movieId = m.getInt("id");
-			movies.add(movie(username, movieId));
+			movies.add(movie(movieId));
 		}
 
 		return movies;
