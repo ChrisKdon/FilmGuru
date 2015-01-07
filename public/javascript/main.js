@@ -84,6 +84,13 @@
 		$("#movie-" + movieId + " .star-rating").addClass("user");
 	}
 
+	/**
+	 * Redirect to login screen if an error occurred.
+	 */
+	$(document).ajaxError(function() {
+		window.location.href = "/login.html";
+	});
+
 	$(function () {
 		loadPopularMovies(session.page, function() {
 			$btnPageBack.click(onBackPressed);

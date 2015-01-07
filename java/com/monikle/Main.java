@@ -42,6 +42,12 @@ public class Main {
 			return null;
 		});
 
+		post("/logout", (req, res) -> {
+			req.session().removeAttribute("username");
+			res.redirect("/login.html");
+			return null;
+		});
+
 		post("/userlogin", (req, res) -> {
 			UserTable users = UserTable.getTable();
 
@@ -61,7 +67,8 @@ public class Main {
 				return null;
 			}
 
-			req.session().attribute("username", "test");
+			users.save(username, password);
+			req.session().attribute("username", username);
 			res.redirect("/");
 
 			return null;
@@ -75,8 +82,12 @@ public class Main {
 				return "error";
 			}
 
+			String username = req.session().attribute("username");
+
+			System.out.println("Username: " + username);
+
 			List<MovieDetail> popular = MovieAPI.popular(Integer.parseInt(req.params("page")));
-			return popular.parallelStream().map(movie -> new MovieViewModel(req.session().attribute("username"), movie)).toArray();
+			return popular.parallelStream().map(movie -> new MovieViewModel(username, movie)).toArray();
 		}, new JsonTransformer());
 
 		/**
