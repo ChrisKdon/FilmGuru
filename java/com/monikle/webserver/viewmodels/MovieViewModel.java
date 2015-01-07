@@ -2,6 +2,7 @@ package com.monikle.webserver.viewmodels;
 
 import com.monikle.memdb.MovieDatabase;
 import com.monikle.models.MovieDetail;
+import com.monikle.webserver.Config;
 import com.monikle.webserver.rater.MovieRaterFactory;
 
 import java.util.Optional;
@@ -31,9 +32,12 @@ public final class MovieViewModel {
 		if(rating.isPresent()) {
 			this.isUserRating = true;
 			this.rating = rating.get();
-		} else {
+		} else if(db.ratings.modificationCount(username) >= Config.UPDATE_NET_MODIFICATION_COUNT) {
 			this.isUserRating = false;
 			this.rating = estimateRating(username, movie);
+		} else { // Not rated and the rating system hasn't been trained yet
+			this.isUserRating = false;
+			this.rating = 0;
 		}
 	}
 

@@ -109,7 +109,7 @@ public final class MovieRater {
 
 					TrainingResult bestResult = null;
 					NeuralNetwork bestNet = null;
-					
+
 					for(int i = 0; i < maxRetries + 1; i++) {
 						NeuralNetwork tempNet = createNetwork();
 						TrainingResult result = tempNet.train(config);
