@@ -27,8 +27,6 @@ public class Main {
 	private static void initSparkServer() {
 		externalStaticFileLocation("./public"); // Static files
 
-		String DEBUG_USERNAME = "test";
-
 		/**
 		 * Redirect to either login or the main app
 		 */
@@ -97,16 +95,17 @@ public class Main {
 			}
 
 			MovieDatabase db = MovieDatabase.getDb();
+			String username = req.session().attribute("username");
 
 			int movieId = Integer.parseInt(req.params("id"));
 			int rating = Integer.parseInt(req.queryParams("rating"));
 
-			db.ratings.save(req.session().attribute("username"), movieId, rating); // Update rating
+			db.ratings.save(username, movieId, rating); // Update rating
 
 			// Train the rater
-			long modCount = db.ratings.modificationCount(DEBUG_USERNAME);
+			long modCount = db.ratings.modificationCount(username);
 			if (modCount > 0 && modCount % Config.UPDATE_NET_MODIFICATION_COUNT == 0) {
-				MovieRaterFactory.getForUsername(DEBUG_USERNAME).train();
+				MovieRaterFactory.getForUsername(username).train();
 			}
 
 			return "done";

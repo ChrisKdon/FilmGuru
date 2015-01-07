@@ -38,13 +38,14 @@ public class MovieAPI {
 
 			int year = Integer.parseInt(result.getString("release_date").substring(0, 3));
 			boolean isEnglish = result.getString("original_language").equals("en");
+			double voteAverage = result.getDouble("vote_average");
 
 			MovieDetail movie = new MovieDetail(movieId,
 					result.getString("title"),
 					result.getString("poster_path"),
 					result.getString("imdb_id"),
 					genres.stream().toArray(size -> new String[size]),
-					year, isEnglish);
+					year, isEnglish, voteAverage);
 
 			db.movies.save(movie);
 

@@ -14,12 +14,14 @@ public final class Config {
 	public static final int MAX_RATING = 5;
 	public static final int MIN_YEAR = 1950;
 	public static final int MAX_YEAR = 2100;
+	public static final int MIN_VOTE = 1;
+	public static final int MAX_VOTE = 10;
 
 	// Neural Network Params
 	public static final double ACCEPTABLE_ERROR = 0.3;
 	public static final int MAX_EPOCHS = 2000;
 	public static final int MAX_RETRIES = 3;
-	public static final int HIDDEN_NODE_COUNT = 200;
+	public static final int HIDDEN_NODE_COUNT = 100;
 	public static final double LEARNING_RATE = 0.1;
 	public static final double MOMENTUM = 0.5;
 
@@ -51,6 +53,7 @@ public final class Config {
 		// Other
 		mapNodeToIndex("Year");
 		mapNodeToIndex("English");
+		mapNodeToIndex("VoteAverage");
 	}
 
 	private static int nodeIndexCounter = 0;

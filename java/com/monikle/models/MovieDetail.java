@@ -9,15 +9,15 @@ public final class MovieDetail {
 	protected String movieTitle;      // The name of the movie
 	protected String moviePosterFile; // The movie poster from http://image.tmdb.org/t/p/w500/<moviePosterFile>
 	protected String imdbId;          // IMDB
-
-	protected String[] genres;
-	protected int year;
-	protected boolean isEnglish;
+	protected String[] genres;				// Genres this movie belongs to
+	protected int year;								// Year the movie was released
+	protected boolean isEnglish;			// Is the movie in english
+	protected double voteAverage;			// The average vote for the movie
 
 	// Add empty constructor if object needs to be deserialized from gson
 
 	public MovieDetail(int movieId, String movieTitle, String moviePosterFile,
-										 String imdbId, String[] genres, int year, boolean isEnglish) {
+										 String imdbId, String[] genres, int year, boolean isEnglish, double voteAverage) {
 
 		this.movieId = movieId;
 		this.movieTitle = movieTitle;
@@ -26,6 +26,7 @@ public final class MovieDetail {
 		this.genres = genres;
 		this.year = year;
 		this.isEnglish = isEnglish;
+		this.voteAverage = voteAverage;
 	}
 
 	public int getMovieId() {
@@ -54,5 +55,9 @@ public final class MovieDetail {
 
 	public boolean isEnglish() {
 		return isEnglish;
+	}
+
+	public double getVoteAverage() {
+		return voteAverage;
 	}
 }

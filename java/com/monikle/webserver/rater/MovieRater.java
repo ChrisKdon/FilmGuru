@@ -20,6 +20,7 @@ public final class MovieRater {
 	private final Map<String, Integer> nodeIndices;
 	private final int inputCount, hiddenCount, outputCount;
 	private final int minYear, maxYear;
+	private final int minVote, maxVote;
 	private final double learningRate, momentum;
 	private final double acceptableError;
 	private final int maxEpochs, maxRetries;
@@ -42,6 +43,8 @@ public final class MovieRater {
 
 		this.minYear = Config.MIN_YEAR;
 		this.maxYear = Config.MAX_YEAR;
+		this.minVote = Config.MIN_VOTE;
+		this.maxVote = Config.MAX_VOTE;
 
 		this.username = username;
 
@@ -106,7 +109,7 @@ public final class MovieRater {
 
 					TrainingResult bestResult = null;
 					NeuralNetwork bestNet = null;
-
+					
 					for(int i = 0; i < maxRetries + 1; i++) {
 						NeuralNetwork tempNet = createNetwork();
 						TrainingResult result = tempNet.train(config);
@@ -123,8 +126,6 @@ public final class MovieRater {
 							bestResult = result;
 							bestNet = tempNet;
 						}
-
-						System.out.println("Retry");
 					}
 
 					// Update the current network
@@ -163,12 +164,24 @@ public final class MovieRater {
 		mapGenreNodes(movie.getGenres(), input);
 		mapYearNode(movie.getYear(), input);
 		mapEnglishNode(movie.isEnglish(), input);
+		mapVoteAverageNode(movie.getVoteAverage(), input);
 
 		return input;
 	}
 
 	private void mapEnglishNode(boolean isEnglish, double[] writeTo) {
 		writeTo[nodeIndices.get("English")] = isEnglish ? 1 : 0;
+	}
+
+	private void mapVoteAverageNode(double vote, double[] writeTo) {
+		if(vote < minVote) {
+			vote = minVote;
+		}
+		if(vote > maxVote) {
+			vote = maxVote;
+		}
+
+		writeTo[nodeIndices.get("VoteAverage")] = scale(minVote, maxVote, -1, 1, vote);
 	}
 
 	private void mapYearNode(int year, double[] writeTo) {
@@ -179,9 +192,7 @@ public final class MovieRater {
 			year = maxYear;
 		}
 
-		double value = scale(minYear, maxYear, 0, 1, year);
-
-		writeTo[nodeIndices.get("Year")] = value;
+		writeTo[nodeIndices.get("Year")] = scale(minYear, maxYear, -1, 1, year);
 	}
 
 	private void mapGenreNodes(String[] genres, double[] writeTo) {
