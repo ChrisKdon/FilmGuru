@@ -11,14 +11,12 @@ public final class Database {
 
 	public final RatingsTable ratings;
 	public final MovieTable movies;
-	public final NeuralNetTable neuralNets;
 	public final MovieRaterTable raters;
 	public final UserTable users;
 
 	private Database() {
 		this.ratings = RatingsTable.getTable();
 		this.movies = MovieTable.getTable();
-		this.neuralNets = NeuralNetTable.getTable();
 		this.raters = MovieRaterTable.getTable();
 		this.users = UserTable.getTable();
 	}
