@@ -84,8 +84,6 @@ public class Main {
 
 			String username = req.session().attribute("username");
 
-			System.out.println("Username: " + username);
-
 			List<MovieDetail> popular = MovieAPI.popular(Integer.parseInt(req.params("page")));
 			return popular.parallelStream().map(movie -> new MovieViewModel(username, movie)).toArray();
 		}, new JsonTransformer());

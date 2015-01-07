@@ -28,7 +28,9 @@
 	function loadPopularMovies(page, onLoadComplete) {
 		$.getJSON("movies/popular/" + page, function (movies) {
 			$("#movie-list-holder").html(templates.movieList({movies: movies}));
+
 			initRatingControls();
+			renderPageControls();
 
 			if(onLoadComplete) { onLoadComplete(); }
 		});
@@ -55,8 +57,6 @@
 			session.page -= 1;
 			loadPopularMovies(session.page);
 		}
-
-		renderPageControls();
 	}
 
 	function onNextPressed() {
@@ -64,8 +64,6 @@
 			session.page += 1;
 			loadPopularMovies(session.page);
 		}
-
-		renderPageControls();
 	}
 
 	function saveRating(movieId, rating) {
