@@ -13,7 +13,17 @@ public interface NeuralNetwork {
 	 * @return The error.
 	 */
 	public TrainingResult train(TrainerConfiguration config);
+
+	/**
+	 * Run the network using these values as inputs.
+	 * @param inputs The input values.
+	 * @return The output vector of the neural network.
+	 */
 	public Vector run(double... inputs);
 	public Vector run(Vector inputs);
+
+	/**
+	 * Run multiple input vectors.
+	 */
 	public Vector[] runMultiple(Vector[] inputs);
 }

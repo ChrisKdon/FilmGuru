@@ -1,6 +1,6 @@
 package com.monikle;
 
-import com.monikle.memdb.MovieDatabase;
+import com.monikle.memdb.Database;
 import com.monikle.memdb.UserTable;
 import com.monikle.models.MovieDetail;
 import com.monikle.neuro.NeuralNetwork;
@@ -16,11 +16,7 @@ import java.util.List;
 import static spark.Spark.*;
 
 public class Main {
-	public static NeuralNetwork net;
-
 	public static void main(String[] args) {
-		//net = new FeedForwardNetwork(Config.NODE_INDICES.size(), Config.NODE_INDICES.size() * 4, 5, 0.1, 0.9);
-
 		initSparkServer();
 	}
 
@@ -40,12 +36,18 @@ public class Main {
 			return null;
 		});
 
+		/**
+		 * Log a user out.
+		 */
 		post("/logout", (req, res) -> {
 			req.session().removeAttribute("username");
 			res.redirect("/login.html");
 			return null;
 		});
 
+		/**
+		 * Log a user in.
+		 */
 		post("/userlogin", (req, res) -> {
 			UserTable users = UserTable.getTable();
 
@@ -94,7 +96,7 @@ public class Main {
 				return "error";
 			}
 
-			MovieDatabase db = MovieDatabase.getDb();
+			Database db = Database.getDb();
 			String username = req.session().attribute("username");
 
 			int movieId = Integer.parseInt(req.params("id"));
@@ -112,6 +114,10 @@ public class Main {
 		});
 	}
 
+	/**
+	 * Ensure the session has a username.
+	 * @return true if it does, false otherwise.
+	 */
 	private static boolean gaurdUsername(spark.Request request, Response response) {
 		if (request.session().attribute("username") == null) {
 			response.status(401);

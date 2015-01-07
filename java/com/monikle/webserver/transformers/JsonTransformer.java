@@ -5,17 +5,13 @@ import com.google.gson.GsonBuilder;
 import spark.ResponseTransformer;
 
 /**
+ * Serialized Java objects into their JSON representation.
+ *
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */
 public class JsonTransformer implements ResponseTransformer {
-	private Gson gson;
-
-	public JsonTransformer() {
-		GsonBuilder gson = new GsonBuilder();
-
-		this.gson = gson.create();
-	}
+	private Gson gson = new Gson();
 
 	@Override
 	public String render(Object model) {

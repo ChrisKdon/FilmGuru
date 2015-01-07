@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Stores the data for a training session on the neural network. This
  * includes the inputs and the expected outputs.
- *
+ * <p>
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */

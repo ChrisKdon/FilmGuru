@@ -6,6 +6,8 @@ import com.monikle.webserver.Config;
 import java.util.Optional;
 
 /**
+ * Creates movie rater systems.
+ *
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */

@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
+ * Table that holds the instances of <code>MovieRater</code>
+ * that have been trained for users.
+ *
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */

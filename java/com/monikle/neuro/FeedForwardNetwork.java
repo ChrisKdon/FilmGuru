@@ -151,10 +151,6 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 
 	/**
 	 * Adds the bias to the input and calculates the output.
-	 *
-	 * @param input
-	 * @param weights
-	 * @return
 	 */
 	public Vector calculateLayerOutput(Vector input, Matrix weights) {
 		return Vector.fromMatrix(input.multiply(weights).map(this::activationFunction));
@@ -162,9 +158,6 @@ public final class FeedForwardNetwork implements NeuralNetwork {
 
 	/**
 	 * Sigmoid function.
-	 *
-	 * @param input
-	 * @return
 	 */
 	private double activationFunction(double input) {
 		return 1.0 / (1.0 + Math.exp(-input));

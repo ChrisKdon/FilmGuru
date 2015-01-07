@@ -10,7 +10,7 @@ import java.util.*;
  * Student #: 4810800
  */
 public final class RatingsTable {
-	private static MovieDatabase db = MovieDatabase.getDb();
+	private static Database db = Database.getDb();
 	private static RatingsTable instance;
 
 	private Map<String, Map<Integer, Integer>> userRatings; // <Username, <Movie ID, Rating>>
@@ -29,6 +29,13 @@ public final class RatingsTable {
 		return instance;
 	}
 
+	/**
+	 * Save the rating for a particular user and movie.
+	 *
+	 * @param username The user to associate with the movie and rating.
+	 * @param movieId The movie to associate with the rating.
+	 * @param rating The rating for the movie.
+	 */
 	public synchronized void save(String username, int movieId, int rating) {
 		Map<Integer, Integer> ratingForUser = userRatings.getOrDefault(username, new HashMap<>());
 		ratingForUser.put(movieId, rating);
@@ -39,10 +46,6 @@ public final class RatingsTable {
 
 	/**
 	 * Return the rating for a user and movie.
-	 *
-	 * @param username
-	 * @param movieId
-	 * @return
 	 */
 	public synchronized Optional<Integer> getRating(String username, int movieId) {
 		int rating = userRatings
@@ -52,6 +55,9 @@ public final class RatingsTable {
 		return rating == -1 ? Optional.empty() : Optional.of(rating);
 	}
 
+	/**
+	 * Get all the movie ratings that a user has made.
+	 */
 	public synchronized List<MovieRating> getMovieRatings(String username) throws Exception {
 		List<MovieRating> movieRatings = new ArrayList<>();
 
@@ -66,11 +72,10 @@ public final class RatingsTable {
 		return movieRatings;
 	}
 
+	/**
+	 * Get the number of times that a user has modified a rating.
+	 */
 	public synchronized long modificationCount(String username) {
 		return ratingModifications.getOrDefault(username, 0L);
-	}
-
-	public synchronized int recordCountFor(String username) {
-		return userRatings.getOrDefault(username, new HashMap<>()).size();
 	}
 }

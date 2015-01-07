@@ -3,6 +3,8 @@ package com.monikle.neuro.math;
 import java.util.Arrays;
 
 /**
+ * A one dimensional matrix.
+ *
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */

@@ -1,7 +1,7 @@
 package com.monikle.webserver.tmdb;
 
 import com.mashape.unirest.http.Unirest;
-import com.monikle.memdb.MovieDatabase;
+import com.monikle.memdb.Database;
 import com.monikle.models.MovieDetail;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,16 +11,25 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * Wrapper around the TMDB API for the functions that need to be implemented.
+ *
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */
 public class MovieAPI {
-	private static MovieDatabase db = MovieDatabase.getDb();
+	private static Database db = Database.getDb();
 	private static String API_KEY = "b49b1c4bca7553daf26632cf8237e6e6";
 
 	private MovieAPI() {
 	}
 
+	/**
+	 * Get information about a movie. This function will cache queries.
+	 *
+	 * @param movieId			The ID of the movie information is needed for.
+	 * @return						The movie details.
+	 * @throws Exception
+	 */
 	public static MovieDetail movie(int movieId) throws Exception {
 		Optional<MovieDetail> movieOpt = db.movies.get(movieId); // Check cache
 
@@ -55,6 +64,13 @@ public class MovieAPI {
 		}
 	}
 
+	/**
+	 * Get the current popular movies.
+	 *
+	 * @param page				Page number of the popular movies to retrieve.
+	 * @return						List of movie information for the popular movies.
+	 * @throws Exception
+	 */
 	public static List<MovieDetail> popular(int page) throws Exception {
 		JSONObject result = Unirest.get("http://api.themoviedb.org/3/movie/popular")
 				.queryString("api_key", API_KEY)

@@ -3,6 +3,8 @@ package com.monikle.neuro;
 import com.monikle.neuro.math.Vector;
 
 /**
+ * A single sample of inputs and expected outputs for training.
+ * <p>
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */
@@ -14,7 +16,11 @@ public final class TrainingSample {
 		this.outputs = new Vector(outputs);
 	}
 
-	public Vector getInputs() { return inputs; }
+	public Vector getInputs() {
+		return inputs;
+	}
 
-	public Vector getOutputs() { return outputs; }
+	public Vector getOutputs() {
+		return outputs;
+	}
 }

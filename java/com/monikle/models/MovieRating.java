@@ -3,6 +3,9 @@ package com.monikle.models;
 import java.util.Optional;
 
 /**
+ * A pairing class to associate a movie with a rating it has
+ * at some instance.
+ *
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */

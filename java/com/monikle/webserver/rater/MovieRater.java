@@ -1,20 +1,24 @@
 package com.monikle.webserver.rater;
 
-import com.monikle.memdb.MovieDatabase;
-import com.monikle.neuro.*;
-import com.monikle.webserver.Config;
+import com.monikle.memdb.Database;
 import com.monikle.models.MovieDetail;
 import com.monikle.models.MovieRating;
+import com.monikle.neuro.*;
+import com.monikle.webserver.Config;
 
 import java.util.List;
 import java.util.Map;
 
 /**
+ * Mainly just a wrapper around the neural network to handle taking in
+ * movie types and converting them to a usable format for the neural network. Then
+ * outputing a rating.
+ *
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */
 public final class MovieRater {
-	private static MovieDatabase db = MovieDatabase.getDb();
+	private static Database db = Database.getDb();
 
 	private final String username;
 	private final Map<String, Integer> nodeIndices;
@@ -89,7 +93,7 @@ public final class MovieRater {
 	 * @throws Exception
 	 */
 	public void train() throws Exception {
-		if(!isTraining) {
+		if (!isTraining) {
 			new Thread(() -> {
 				try {
 					isTraining = true;
@@ -110,19 +114,19 @@ public final class MovieRater {
 					TrainingResult bestResult = null;
 					NeuralNetwork bestNet = null;
 
-					for(int i = 0; i < maxRetries + 1; i++) {
+					for (int i = 0; i < maxRetries + 1; i++) {
 						NeuralNetwork tempNet = createNetwork();
 						TrainingResult result = tempNet.train(config);
 
 						// Have we met the acceptable error
-						if(result.getError() <= acceptableError) {
+						if (result.getError() <= acceptableError) {
 							bestResult = result;
 							bestNet = tempNet;
 							break;
 						}
 
 						// Save the best network that has been found so far
-						if(bestResult == null || result.getError() < bestResult.getError()) {
+						if (bestResult == null || result.getError() < bestResult.getError()) {
 							bestResult = result;
 							bestNet = tempNet;
 						}
@@ -141,6 +145,11 @@ public final class MovieRater {
 		}
 	}
 
+	/**
+	 * Get the rating for a particular movie using this rating system.
+	 * @param movie The movie to get the rating for.
+	 * @return			The rating for the movie.
+	 */
 	public synchronized int getRating(MovieDetail movie) {
 		return getRatingFromResult(network.run(mapMovieToNetworkInput(movie)).getValues());
 	}
@@ -174,10 +183,10 @@ public final class MovieRater {
 	}
 
 	private void mapVoteAverageNode(double vote, double[] writeTo) {
-		if(vote < minVote) {
+		if (vote < minVote) {
 			vote = minVote;
 		}
-		if(vote > maxVote) {
+		if (vote > maxVote) {
 			vote = maxVote;
 		}
 

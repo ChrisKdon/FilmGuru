@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Configuration file for network parameters.
+ *
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */

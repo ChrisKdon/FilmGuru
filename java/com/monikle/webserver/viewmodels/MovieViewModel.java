@@ -1,6 +1,6 @@
 package com.monikle.webserver.viewmodels;
 
-import com.monikle.memdb.MovieDatabase;
+import com.monikle.memdb.Database;
 import com.monikle.models.MovieDetail;
 import com.monikle.webserver.Config;
 import com.monikle.webserver.rater.MovieRaterFactory;
@@ -8,11 +8,13 @@ import com.monikle.webserver.rater.MovieRaterFactory;
 import java.util.Optional;
 
 /**
+ * The movie details that are needed to be displayed to the user.
+ *
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */
 public final class MovieViewModel {
-	private static MovieDatabase db = MovieDatabase.getDb();
+	private static Database db = Database.getDb();
 
 	private int movieId;            // ID of the movie on tmdb.org
 	private String movieTitle;      // The name of the movie
@@ -41,6 +43,13 @@ public final class MovieViewModel {
 		}
 	}
 
+	/**
+	 * Calculate the estimated rating for a movie.
+	 *
+	 * @param username The username to get the rating system for.
+	 * @param movie		 The movie to get the rating for.
+	 * @return				 The rating for the movie.
+	 */
 	private static int estimateRating(String username, MovieDetail movie) {
 		return MovieRaterFactory.getForUsername(username).getRating(movie);
 	}

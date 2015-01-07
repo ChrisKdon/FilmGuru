@@ -1,6 +1,8 @@
 package com.monikle.neuro;
 
 /**
+ * Setup information for training a neural network.
+ * <p>
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */
@@ -15,11 +17,15 @@ public final class TrainerConfiguration {
 	}
 
 	public static TrainerConfiguration create(TrainingData trainingData) {
-		if(trainingData == null) {
+		if (trainingData == null) {
 			throw new IllegalArgumentException("`trainingData` can't be null.");
 		}
 
 		return new TrainerConfiguration(trainingData);
+	}
+
+	public int getMaxEpochs() {
+		return maxEpochs;
 	}
 
 	public TrainerConfiguration setMaxEpochs(int count) {
@@ -27,12 +33,13 @@ public final class TrainerConfiguration {
 		return this;
 	}
 
-	public int getMaxEpochs() {
-		return maxEpochs;
-	}
-
 	public double getAcceptableError() {
 		return acceptableError;
+	}
+
+	public TrainerConfiguration setAcceptableError(double error) {
+		this.acceptableError = error;
+		return this;
 	}
 
 	public TrainingData getTrainingData() {
@@ -45,11 +52,6 @@ public final class TrainerConfiguration {
 
 	public TrainerConfiguration setShuffleTrainingData(boolean shuffle) {
 		this.shuffleTrainingData = shuffle;
-		return this;
-	}
-
-	public TrainerConfiguration setAcceptableError(double error) {
-		this.acceptableError = error;
 		return this;
 	}
 }

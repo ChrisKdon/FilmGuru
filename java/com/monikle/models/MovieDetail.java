@@ -1,6 +1,9 @@
 package com.monikle.models;
 
 /**
+ * Model of information related to a movie. This information comes
+ * from the TMDB API.
+ *
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */
@@ -9,12 +12,10 @@ public final class MovieDetail {
 	protected String movieTitle;      // The name of the movie
 	protected String moviePosterFile; // The movie poster from http://image.tmdb.org/t/p/w500/<moviePosterFile>
 	protected String imdbId;          // IMDB
-	protected String[] genres;				// Genres this movie belongs to
-	protected int year;								// Year the movie was released
-	protected boolean isEnglish;			// Is the movie in english
-	protected double voteAverage;			// The average vote for the movie
-
-	// Add empty constructor if object needs to be deserialized from gson
+	protected String[] genres;        // Genres this movie belongs to
+	protected int year;               // Year the movie was released
+	protected boolean isEnglish;      // Is the movie in english
+	protected double voteAverage;    	// The average vote for the movie
 
 	public MovieDetail(int movieId, String movieTitle, String moviePosterFile,
 										 String imdbId, String[] genres, int year, boolean isEnglish, double voteAverage) {

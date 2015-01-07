@@ -2,7 +2,7 @@ package com.monikle.neuro;
 
 /**
  * Information about how the training of the neural network went.
- *
+ * <p>
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */

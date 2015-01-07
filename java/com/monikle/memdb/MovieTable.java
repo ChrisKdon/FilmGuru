@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Stores movie information so we don't have to keep calling the web api.
+ * Table that stores movie information so we don't have to keep calling the web api.
  * Basically acting as a cache.
  * <p>
  * Author:    Chris Kellendonk

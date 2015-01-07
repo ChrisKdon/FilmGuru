@@ -5,6 +5,9 @@ import java.util.Random;
 import java.util.function.DoubleFunction;
 
 /**
+ * Immutable matrix for doing calculations with.
+ * All operations on matrix return a new matrix without modifying the original.
+ *
  * Author:    Chris Kellendonk
  * Student #: 4810800
  */
@@ -28,12 +31,13 @@ public class Matrix {
 	// Factories ------------------------
 
 	/**
-	 * Generate a random matrix
-	 * @param rows
-	 * @param columns
-	 * @param min
-	 * @param max
-	 * @return
+	 * Generate a random matrix.
+	 *
+	 * @param rows		Number of rows in the matrix.
+	 * @param columns Number of columns in the matrix.
+	 * @param min			The min value of an element in the matrix.
+	 * @param max			The max value of an element in the matrix.
+	 * @return The new matrix.
 	 */
 	public static Matrix random(int rows, int columns, double min, double max) {
 		double[][] values = new double[rows][columns];
@@ -75,6 +79,9 @@ public class Matrix {
 
 	// Operations -----------------------
 
+	/**
+	 * Multiply to matrices together elementwise.
+	 */
 	public Matrix hadamardMultiply(Matrix withMatrix) {
 		checkEqualSize(this, withMatrix);
 
@@ -88,6 +95,10 @@ public class Matrix {
 		return new Matrix(temp);
 	}
 
+	/**
+	 * Multiply each element in the matrix by a specific value.
+	 * @param value The value to multiple with.
+	 */
 	public Matrix scalarMultiply(double value) {
 		return map(elem -> elem * value);
 	}
